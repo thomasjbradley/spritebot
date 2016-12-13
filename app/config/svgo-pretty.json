@@ -6,7 +6,7 @@
     {"removeXMLProcInst": true},
     {"removeComments": true},
     {"removeMetadata": true},
-    {"removeXMLNS": false},
+    {"removeXMLNS": true},
     {"removeEditorsNSData": true},
     {"cleanupAttrs": true},
     {"minifyStyles": true},

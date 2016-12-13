@@ -17,7 +17,7 @@ const createMainWindow = function (next) {
     vibrancy: 'light',
   });
 
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
+  mainWindow.loadURL('file://' + __dirname + '/app/main/main.html');
 
   mainWindow.on('closed', function () {
     mainWindow = null;
