@@ -9,11 +9,12 @@ let mainWindow;
 
 const createMainWindow = function (next) {
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: 600,
     minWidth: 600,
-    height: 600,
+    height: 400,
     show: false,
-    minHeight: 550,
+    minHeight: 400,
+    vibrancy: 'light',
   });
 
   mainWindow.loadURL('file://' + __dirname + '/index.html');
