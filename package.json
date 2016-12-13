@@ -1,0 +1,28 @@
+{
+  "name": "Spritebot",
+  "version": "1.0.0",
+  "license": "GPL",
+  "description": "A SVG compression, minification, prettification & sprite generation application.",
+  "author": "Thomas J Bradley <hey@thomasjbradley.ca>",
+  "homepage": "https://github.com/thomasjbradley/spritebot",
+  "bugs": "https://github.com/thomasjbradley/spritebot/issues",
+  "private": true,
+  "main": "spritebot.js",
+  "dependencies": {
+    "electron-is": "^2.3.0",
+    "merge-objects": "^1.0.5",
+    "node-dir": "^0.1.16",
+    "svgo": "^0.7.1"
+  },
+  "devDependencies": {
+    "electron": "^1.4.10",
+    "electron-builder": "^10.5.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development electron spritebot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomasjbradley/spritebot.git"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "multipass": true,
+  "full": true,
+  "plugins": [
+    {"removeDoctype": true},
+    {"removeXMLProcInst": true},
+    {"removeComments": true},
+    {"removeMetadata": true},
+    {"removeXMLNS": false},
+    {"removeEditorsNSData": true},
+    {"cleanupAttrs": true},
+    {"minifyStyles": true},
+    {"convertStyleToAttrs": true},
+    {"cleanupIDs": false},
+    {"removeRasterImages": true},
+    {"removeUselessDefs": true},
+    {"cleanupNumericValues": {
+      "floatPrecision": 2
+    }},
+    {"cleanupListOfValues": {
+      "floatPrecision": 2
+    }},
+    {"convertColors": true},
+    {"removeUnknownsAndDefaults": true},
+    {"removeNonInheritableGroupAttrs": true},
+    {"removeUselessStrokeAndFill": true},
+    {"removeViewBox": false},
+    {"cleanupEnableBackground": true},
+    {"removeHiddenElems": true},
+    {"removeEmptyText": true},
+    {"convertShapeToPath": false},
+    {"moveElemsAttrsToGroup": true},
+    {"moveGroupAttrsToElems": true},
+    {"collapseGroups": false},
+    {"convertPathData": true},
+    {"convertTransform": true},
+    {"removeEmptyAttrs": true},
+    {"removeEmptyContainers": true},
+    {"mergePaths": false},
+    {"removeUnusedNS": true},
+    {"transformsWithOnePath": false},
+    {"sortAttrs": true},
+    {"removeTitle": true},
+    {"removeDesc": {
+      "removeAny": true
+    }},
+    {"removeDimensions": false},
+    {"removeAttrs": false},
+    {"removeElementsByAttr": false},
+    {"addClassesToSVGElement": false},
+    {"removeStyleElement": true},
+    {"addAttributesToSVGElement": false}
+  ],
+  "js2svg": {
+    "pretty": true,
+    "indent": 2
+  }
+}

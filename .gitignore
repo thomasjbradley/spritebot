@@ -1,0 +1,59 @@
+# Test files
+node_modules
+npm-debug.log
+
+# Jekyll
+_site
+.jekyll-metadata
+
+# Temporary files
+tmp
+
+# Adobe files
+*.pdf
+*.ai
+*.psd
+*.indd
+*.indb
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.7z
+
+# Type faces
+*.otf
+*.ttf
+*.woff
+*.eot
+*.ttc
+
+# Video & audio
+*.mov
+*.mp4
+*.m4v
+*.f4v
+*.f4p
+*.ogv
+*.webm
+*.flv
+*.mp3
+*.m4a
+*.f4a
+*.f4b
+*.oga
+*.ogg
+*.opus
+
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Files that might appear on external disks
+.Spotlight-V100
+.Trashes
