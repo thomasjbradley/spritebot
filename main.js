@@ -3,95 +3,66 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const SVGO = require('svgo');
+const dir = require('node-dir');
+const merge = require('merge-objects');
 const electron = require('electron');
 const shell = electron.shell;
 const listener = electron.ipcRenderer;
-const SVGO = require('svgo');
-const dir = require('node-dir');
+
 const svgomin = new SVGO(require('./svgo-min.json'));
+const svgQueue = require('./app/file-queue');
+const svgHelper = require('./app/svg-helper');
+const sizeHelper = require('./app/file-size-helper');
 
 const $body = document.body;
-let allFiles = [];
-
-const bytesToKilobytes = function (bytes) {
-  return Math.round((bytes / 1024) * 1000) / 1000;
-};
-
-const diffBytesInKilobytes = function (bytesIn, bytesOut) {
-  return Math.round((100 - bytesOut * 100 / bytesIn) * 10) /  10;
-}
 
 const render = function (filePath, bytesIn, bytesOut) {
-  console.log(path.parse(filePath).base, bytesToKilobytes(bytesIn), bytesToKilobytes(bytesOut), diffBytesInKilobytes(bytesIn, bytesOut));
+  console.log(path.parse(filePath).base, sizeHelper.bytesToKilobytes(bytesIn), sizeHelper.bytesToKilobytes(bytesOut), sizeHelper.diffBytesInKilobytes(bytesIn, bytesOut));
 };
 
-const getDimensionsFromViewBox = function (vb) {
-  let viewBox = vb.split(/(?:,\s*|\s+)/);
-
-  return {
-    width: parseFloat(viewBox[2]),
-    height: parseFloat(viewBox[3]),
-  };
-};
-
-const forceWidthHeight = function (svg) {
-  let matches = svg.match(/<svg[^>]+>/);
-  let svgTag;
-  let dimensions;
-
-  if (!matches && !matches[0]) return svg;
-  if (!matches[0].match(/viewBox="([\s\d]+)"/)) return svg;
-
-  svgTag = matches[0];
-  dimensions = getDimensionsFromViewBox(svgTag.match(/viewBox="([\s\d]+)"/)[0])
-
-  if (!svgTag.match(/\s*width=/)) svgTag = svgTag.replace(/>$/, ` width="${dimensions.width}">`);
-  if (!svgTag.match(/\s*height=/)) svgTag = svgTag.replace(/>$/, ` height="${dimensions.height}">`);
-
-  return svg.replace(matches[0], svgTag);
-};
-
-const compressFile = function (file) {
-  let bytesIn, bytesOut;
-
-  fs.readFile(file, 'utf8', function (err, data) {
-    bytesIn = Buffer.byteLength(data);
-
+const optimzeSvg = function (fileId) {
+  fs.readFile(svgQueue.getInfo(fileId).path, 'utf8', function (err, data) {
     svgomin.optimize(data, function (svg) {
-      svg = forceWidthHeight(svg.data);
-      bytesOut = Buffer.byteLength(svg);
-      fs.writeFile(file, svg);
-      render(file, bytesIn, bytesOut);
+      svg = svgHelper.process(svg.data);
+
+      svgQueue.setInfo(fileId, {
+        original: data,
+        optimized: svg,
+        bytesIn: Buffer.byteLength(data),
+        bytesOut: Buffer.byteLength(svg),
+      });
+
+      fs.writeFile(svgQueue.getInfo(fileId).path, svg);
+      render(svgQueue.getInfo(fileId));
     });
   });
 };
 
-const compressAllFiles = function () {
-  if (allFiles.length <= 0) return;
+const findAllSvgsInFolder = function (folderPath) {
+  dir.files(folderPath, function (err, files) {
+    let svgFiles = files.filter(function (item) {
+      return (path.parse(item).ext == '.svg');
+    });
 
-  compressFile(allFiles.shift());
-  compressAllFiles();
-};
+    svgFiles.forEach(function (file) {
+      svgQueue.add(file);
+    });
 
-const findAllSvgsInFolder = function (path) {
-  dir.files(path, function (err, files) {
-    allFiles = allFiles.concat(files.filter(function (item) {
-      return item.match(/\.svg$/);
-    }));
-    compressAllFiles();
+    svgQueue.run(optimzeSvg);
   });
 };
 
-const fileDropped = function (files) {
+const filesDropped = function (files) {
   for (let fileOrDir of files) {
     if (fs.statSync(fileOrDir.path).isDirectory()) {
       findAllSvgsInFolder(fileOrDir.path);
     } else {
-      allFiles.push(fileOrDir.path);
+      svgQueue.add(fileOrDir.path);
     }
   }
 
-  compressAllFiles();
+  svgQueue.run(optimzeSvg);
 };
 
 $body.classList.add(`os-${os.platform()}`);
@@ -116,7 +87,7 @@ $body.ondragleave = function (e) {
 $body.ondrop = function (e) {
   e.preventDefault();
 
-  fileDropped(e.dataTransfer.files);
+  filesDropped(e.dataTransfer.files);
 
   return false;
 };
