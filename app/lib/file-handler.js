@@ -5,16 +5,19 @@ const dir = require('node-dir');
 
 const svgQueue = require(__dirname + '/svg-queue');
 const svgProcessor = require(__dirname + '/svg-processor');
+const svgSpriter = require(__dirname + '/svg-spriter');
 
 const processAllFiles = function (render, opts) {
   svgQueue.run(svgProcessor.optimize, opts, function (svgObj) {
     svgQueue.update(svgObj);
+    svgSpriter.append(svgObj);
     render(svgObj);
   });
 };
 
 const reProcessAllFiles = function (render, opts) {
   svgQueue.reset();
+  svgSpriter.reset();
   processAllFiles(render, opts);
 };
 
@@ -46,7 +49,16 @@ const filesDropped = function (files, renderer, opts) {
   processAllFiles(render, opts);
 };
 
+const saveSpriteSheet = function (filepath, opts) {
+  opts.sprites = true;
+
+  svgSpriter.compile(svgProcessor.generateStringOptimizer(opts), function (sprites) {
+    fs.writeFile(filepath, sprites);
+  });
+};
+
 module.exports = {
   processAllFiles: reProcessAllFiles,
   filesDropped: filesDropped,
+  saveSpriteSheet: saveSpriteSheet,
 };

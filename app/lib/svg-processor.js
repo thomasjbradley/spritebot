@@ -6,6 +6,7 @@ const SVGO = require('svgo');
 
 const svgoMin = new SVGO(require(__dirname + '/../config/svgo-minify.json'));
 const svgoPretty = new SVGO(require(__dirname + '/../config/svgo-pretty.json'));
+const svgoSpriteMin = new SVGO(require(__dirname + '/../config/svgo-sprite-minify.json'));
 
 const defaultOpts = {
   pretty: false,
@@ -25,7 +26,7 @@ const forceWidthHeight = function (svg) {
   let svgTag;
   let dimensions;
 
-  if (!matches && !matches[0]) return svg;
+  if (!matches || !matches[0]) return svg;
   if (!matches[0].match(/viewBox="([\s\d]+)"/)) return svg;
 
   svgTag = matches[0];
@@ -49,15 +50,22 @@ const postProcess = function (svgString) {
   return svgString;
 };
 
-const processSvg = function (svgObj, opts, next) {
+const processSvgString = function (svgString, opts, next) {
   let optimizer = svgoMin;
+
   opts = merge(defaultOpts, opts);
 
+  if (opts.sprites) optimizer = svgoSpriteMin;
   if (opts.pretty) optimizer = svgoPretty;
 
-  optimizer.optimize(svgObj.original, function (svg) {
+  optimizer.optimize(svgString, function (svg) {
     svg = postProcess(svg.data);
+    next(svg);
+  });
+};
 
+const processSvg = function (svgObj, opts, next) {
+  processSvgString(svgObj.original, opts, function (svg) {
     svgObj = merge(svgObj, {
       optimized: svg,
       bytesOut: Buffer.byteLength(svg),
@@ -66,6 +74,12 @@ const processSvg = function (svgObj, opts, next) {
     fs.writeFile(svgObj.path, svg);
     next(svgObj);
   });
+};
+
+const generateStringOptimizer = function (opts) {
+  return function (svgString, next) {
+    processSvgString(svgString, opts, next);
+  };
 };
 
 const optimize = function (svgObj, opts, next) {
@@ -84,5 +98,6 @@ const optimize = function (svgObj, opts, next) {
 };
 
 module.exports = {
+  generateStringOptimizer: generateStringOptimizer,
   optimize: optimize,
 };

@@ -2,9 +2,7 @@
 
 const os = require('os');
 const path = require('path');
-// const electron = require('electron');
-// const shell = electron.shell;
-// const listener = electron.ipcRenderer;
+const {ipcRenderer} = require('electron');
 
 const fileHandler = require(__dirname + '/../lib/file-handler');
 const sizeHelper = require(__dirname + '/../lib/file-size-helper');
@@ -15,12 +13,18 @@ const $resultsTable = document.getElementById('results-table');
 const $prettyOutput = document.getElementById('pretty-output');
 const $saveSpriteSheet = document.getElementById('save-sprite-sheet');
 
+const getInterfaceOpts = function () {
+  return {
+    pretty: $prettyOutput.checked,
+  };
+};
+
 const reset = function () {
   $resultsTable.innerHTML = '';
 };
 
 const render = function (svgObj) {
-  let renderedRow = templateHelper.render('row', {
+  let renderedRow = templateHelper.render('row.html', {
     filename: path.parse(svgObj.path).base,
     bytesIn: sizeHelper.bytesToKilobytes(svgObj.bytesIn),
     bytesOut: sizeHelper.bytesToKilobytes(svgObj.bytesOut),
@@ -32,32 +36,30 @@ const render = function (svgObj) {
 
 $body.classList.add(`os-${os.platform()}`);
 
-$body.ondragover = function (e) {
+$body.addEventListener('dragover', function (e) {
   e.stopImmediatePropagation();
   e.stopPropagation();
   e.preventDefault();
   e.dataTransfer.dropEffect = 'copy';
 
   return false;
-};
+}, true);
 
-$body.ondragleave = function (e) {
+$body.addEventListener('dragleave', function (e) {
   e.stopImmediatePropagation();
   e.stopPropagation();
   e.preventDefault();
 
   return false;
-};
+}, true);
 
-$body.ondrop = function (e) {
+$body.addEventListener('drop', function (e) {
   e.preventDefault();
 
-  fileHandler.filesDropped(e.dataTransfer.files, render, {
-    pretty: $prettyOutput.checked,
-  });
+  fileHandler.filesDropped(e.dataTransfer.files, render, getInterfaceOpts());
 
   return false;
-};
+}, true);
 
 window.addEventListener('will-navigate', function (e) {
   e.preventDefault();
@@ -66,7 +68,13 @@ window.addEventListener('will-navigate', function (e) {
 $prettyOutput.addEventListener('change', function (e) {
   reset();
 
-  fileHandler.processAllFiles(render, {
-    pretty: $prettyOutput.checked,
-  });
+  fileHandler.processAllFiles(render, getInterfaceOpts());
+});
+
+$saveSpriteSheet.addEventListener('click', function (e) {
+  ipcRenderer.send('app:show-save-dialog');
+});
+
+ipcRenderer.on('app:save-sprite-sheet', function (e, filepath) {
+  fileHandler.saveSpriteSheet(filepath, getInterfaceOpts());
 });

@@ -1,8 +1,6 @@
 'use strict';
 
-const electron = require('electron');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const {app, ipcMain, BrowserWindow, dialog} = require('electron');
 
 let appPkg = require('./package.json');
 let mainWindow;
@@ -49,5 +47,16 @@ app.on('open-file', function (e, path) {
 
   if (mainWindow === null) createMainWindow(function () {
     // markbotMain.send('app:file-dropped', path);
+  });
+});
+
+ipcMain.on('app:show-save-dialog', function (e, arg) {
+  const dialogOpts = {
+    title: 'Save Sprite Sheet',
+    defaultPath: app.getPath('downloads') + '/sprite-sheet.svg'
+  };
+
+  dialog.showSaveDialog(mainWindow, dialogOpts, function (filepath) {
+    if (filepath) mainWindow.webContents.send('app:save-sprite-sheet', filepath);
   });
 });

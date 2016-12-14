@@ -9,15 +9,15 @@ const TEMPLATE_FOLDER = path.resolve(__dirname + '/../templates');
 let templates = {};
 
 const getTemplate = function (id) {
-  let temp = fs.readFileSync(`${TEMPLATE_FOLDER}/${id}.html`, 'utf8');
+  let temp = fs.readFileSync(`${TEMPLATE_FOLDER}/${id}`, 'utf8');
 
   templates[id] = temp;
 
   return temp;
 };
 
-const render = function (id, obj) {
-  return handlebars.compile(getTemplate(id))(obj);
+const render = function (id, obj, handlebarsOpts) {
+  return handlebars.compile(getTemplate(id), handlebarsOpts)(obj);
 };
 
 module.exports = {
