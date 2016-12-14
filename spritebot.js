@@ -23,6 +23,14 @@ const createMainWindow = function (next) {
     if (process.platform !== 'darwin') menuCallbacks.quit();
   });
 
+  mainWindow.on('focus', function () {
+    mainWindow.webContents.send('app:focus');
+  });
+
+  mainWindow.on('blur', function () {
+    mainWindow.webContents.send('app:blur');
+  });
+
   mainWindow.once('ready-to-show', function () {
     mainWindow.show();
 

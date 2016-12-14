@@ -1,6 +1,14 @@
-<tr>
-  <td class="status"></td>
+<tr id="{{id}}">
+  <td class="status">
+    <progress class="status-progress" value="0" max="2"></progress>
+  </td>
   <th class="filename" scope="row">{{filename}}</th>
-  <td class="sizes">{{bytesIn}}kB --&gt; {{bytesOut}}kB</td>
-  <td class="savings">{{savings}}%</td>
+  <td class="sizes">
+    <span class="size-bytes"><data class="size-bytesin">{{bytesIn}}</data> kB</span>
+    <span class="size-arrow" aria-label="reduced to">»</span>
+    <span class="size-bytes"><data class="size-bytesout">{{bytesOut}}</data> kB</span>
+  </td>
+  <td class="savings">
+    <strong><data class="savings-value">{{savings}}</data>%</strong>
+  </td>
 </tr>

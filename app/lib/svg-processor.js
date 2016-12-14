@@ -82,9 +82,11 @@ const generateStringOptimizer = function (opts) {
   };
 };
 
-const optimize = function (svgObj, opts, next) {
+const optimize = function (svgObj, opts, before, after) {
+  before(svgObj);
+
   if (svgObj.original) {
-    processSvg(svgObj, opts, next);
+    processSvg(svgObj, opts, after);
   } else {
     fs.readFile(svgObj.path, 'utf8', function (err, data) {
       svgObj = merge(svgObj, {
@@ -92,7 +94,7 @@ const optimize = function (svgObj, opts, next) {
         bytesIn: Buffer.byteLength(data),
       });
 
-      processSvg(svgObj, opts, next);
+      processSvg(svgObj, opts, after);
     });
   }
 };

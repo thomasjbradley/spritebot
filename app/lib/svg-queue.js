@@ -9,7 +9,7 @@ const reset = function () {
   queueIndex = -1;
 }
 
-const run = function (processor, opts, next) {
+const run = function (processor, opts, before, after) {
   queueIndex++;
 
   if (queueIndex >= allFiles.length) {
@@ -17,25 +17,28 @@ const run = function (processor, opts, next) {
     return;
   }
 
-  processor(allFiles[queueIndex], opts, next);
-  run(processor, opts, next);
+  processor(allFiles[queueIndex], opts, before, after);
+  run(processor, opts, before, after);
 };
 
-const alreadyExists = function (path) {
-  let isFound = allFiles.find(function (item) {
+const getByPath = function (path) {
+  return allFiles.find(function (item) {
     return item.path == path;
   });
-
-  return !!isFound;
 };
 
 const add = function (path) {
-  if (alreadyExists(path)) return;
-
-  allFiles.push({
+  let svgObj = {
     id: allFiles.length,
     path: path,
-  });
+  };
+  let prevSvgObj = getByPath(path);
+
+  if (prevSvgObj) return prevSvgObj;
+
+  allFiles.push(svgObj);
+
+  return svgObj;
 };
 
 const update = function (svgObj) {
