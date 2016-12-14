@@ -46,7 +46,7 @@ body {
 nav {
   align-items: center;
   display: flex;
-  padding: 10px;
+  padding: 10px 10px 11px;
 
   background-color: #eaeaea;
   border-top: 1px solid #c7c7c7;

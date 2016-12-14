@@ -54,7 +54,7 @@ app.on('open-file', function (e, path) {
   e.preventDefault();
 
   if (mainWindow === null) createMainWindow(function () {
-    // markbotMain.send('app:file-dropped', path);
+    mainWindow.webContents.send('app:file-dropped', path);
   });
 });
 
