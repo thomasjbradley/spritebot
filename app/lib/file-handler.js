@@ -52,7 +52,11 @@ const filesDropped = function (files, renderer, opts) {
         processAllFiles(renderer, opts);
       });
     } else {
-      let svgObj = svgQueue.add(fileOrDir.path);
+      let svgObj;
+
+      if (path.parse(fileOrDir.path).ext !== '.svg') continue;
+
+      svgObj = svgQueue.add(fileOrDir.path);
       renderer(svgObj);
     }
   }
