@@ -76,7 +76,7 @@ const processSvg = function (svgObj, opts, next) {
   });
 };
 
-const generateStringOptimizer = function (opts) {
+const getOptimizer = function (opts) {
   return function (svgString, next) {
     processSvgString(svgString, opts, next);
   };
@@ -100,6 +100,6 @@ const optimize = function (svgObj, opts, before, after) {
 };
 
 module.exports = {
-  generateStringOptimizer: generateStringOptimizer,
+  getOptimizer: getOptimizer,
   optimize: optimize,
 };

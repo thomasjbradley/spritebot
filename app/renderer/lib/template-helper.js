@@ -8,7 +8,7 @@ const TEMPLATE_FOLDER = path.resolve(__dirname + '/../templates');
 
 let templates = {};
 
-const getTemplate = function (id) {
+const get = function (id) {
   let temp = fs.readFileSync(`${TEMPLATE_FOLDER}/${id}`, 'utf8');
 
   templates[id] = temp;
@@ -17,10 +17,10 @@ const getTemplate = function (id) {
 };
 
 const render = function (id, obj, handlebarsOpts) {
-  return handlebars.compile(getTemplate(id), handlebarsOpts)(obj);
+  return handlebars.compile(get(id), handlebarsOpts)(obj);
 };
 
 module.exports = {
-  getTemplate: getTemplate,
+  get: get,
   render: render,
 };

@@ -1,6 +1,7 @@
 'use strict';
 
 const os = require('os');
+const fs = require('fs');
 const path = require('path');
 const {ipcRenderer, clipboard} = require('electron');
 
@@ -70,7 +71,7 @@ const render = function (svgObj, opts) {
 
 const addFiles = function (files) {
   $header.setAttribute('hidden', true);
-  fileHandler.filesDropped(files, render, getInterfaceOpts());
+  fileHandler.add(files, render, getInterfaceOpts());
   $main.removeAttribute('hidden');
   $saveSpriteSheet.removeAttribute('disabled');
   ipcRenderer.send('menu:enable-file-items');
@@ -89,7 +90,8 @@ const removeAllFiles = function () {
 const togglePrettyOutput = function () {
   ipcRenderer.send('menu:set-pretty-output', getInterfaceOpts().pretty);
   reset();
-  fileHandler.processAllFiles(render, getInterfaceOpts());
+  fileHandler.reset();
+  fileHandler.process(render, getInterfaceOpts());
 };
 
 const moveFocus = function (direction) {
@@ -192,11 +194,13 @@ $resultsTable.addEventListener('mousedown', function (e) {
 });
 
 ipcRenderer.on('app:save-sprite-sheet', function (e, filepath) {
-  fileHandler.saveSpriteSheet(filepath, getInterfaceOpts());
+  fileHandler.compile(getInterfaceOpts(), function (sprites) {
+    fs.writeFile(filepath, sprites);
+  });
 });
 
 ipcRenderer.on('app:copy-svg-sprite-sheet', function (e) {
-  fileHandler.generateSpriteSheet(getInterfaceOpts(), function (sprites) {
+  fileHandler.compile(getInterfaceOpts(), function (sprites) {
     clipboard.writeText(sprites);
   });
 });

@@ -29,11 +29,6 @@ const processAllFiles = function (renderer, opts) {
   );
 };
 
-const reProcessAllFiles = function (renderer, opts) {
-  reset();
-  processAllFiles(renderer, opts);
-};
-
 const findAllSvgsInFolder = function (folderPath, renderer, next) {
   dir.files(folderPath, function (err, files) {
     let svgFiles = files.filter(function (item) {
@@ -49,7 +44,7 @@ const findAllSvgsInFolder = function (folderPath, renderer, next) {
   });
 };
 
-const filesDropped = function (files, renderer, opts) {
+const add = function (files, renderer, opts) {
   for (let fileOrDir of files) {
     let filepath = fileOrDir.path || fileOrDir;
 
@@ -70,24 +65,17 @@ const filesDropped = function (files, renderer, opts) {
   processAllFiles(renderer, opts);
 };
 
-const generateSpriteSheet = function (opts, next) {
+const compile = function (opts, next) {
   opts.sprites = true;
 
-  svgSpriter.compile(svgProcessor.generateStringOptimizer(opts), function (sprites) {
+  svgSpriter.compile(svgProcessor.getOptimizer(opts), function (sprites) {
     next(sprites);
-  });
-};
-
-const saveSpriteSheet = function (filepath, opts) {
-  generateSpriteSheet(opts, function (sprites) {
-    fs.writeFile(filepath, sprites);
   });
 };
 
 module.exports = {
   reset: reset,
-  processAllFiles: reProcessAllFiles,
-  filesDropped: filesDropped,
-  generateSpriteSheet: generateSpriteSheet,
-  saveSpriteSheet: saveSpriteSheet,
+  process: processAllFiles,
+  add: add,
+  compile: compile,
 };
