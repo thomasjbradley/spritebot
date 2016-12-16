@@ -17,15 +17,11 @@ const commands = {
   },
 
   'app:remove-file': function (menuItem, win) {
-
-  },
-
-  'app:pretty-output': function (menuItem, win) {
-    win.send('app:toggle-pretty-output');
+    win.send('app:remove-file');
   },
 
   'app:reveal-in-finder': function (menuItem, win) {
-
+    win.send('app:reveal-in-finder');
   },
 };
 

@@ -85,7 +85,9 @@ ipcMain.on('app:show-save-dialog', function (e, arg) {
 });
 
 ipcMain.on('menu:set-pretty-output', function (e, isPretty) {
-  appMenu.updateMenuItem('edit,pretty-output', {
+  let menuPrefix = (is.macOS()) ? 'app' : 'file';
+
+  appMenu.updateMenuItem(`${menuPrefix},pretty-output`, {
     checked: isPretty,
   });
 });
@@ -103,7 +105,7 @@ ipcMain.on('menu:disable-file-items', function () {
 });
 
 ipcMain.on('menu:enable-focused-file-items', function () {
-  // appMenu.updateMenuItem('file,reveal-in-finder', { enabled: true });
+  appMenu.updateMenuItem('edit,reveal-in-finder', { enabled: true });
   // appMenu.updateMenuItem('edit,revert-to-original', { enabled: true });
   appMenu.updateMenuItem('edit,copy-svg', { enabled: true });
   appMenu.updateMenuItem('edit,copy-svg-datauri', { enabled: true });
@@ -111,7 +113,7 @@ ipcMain.on('menu:enable-focused-file-items', function () {
 });
 
 ipcMain.on('menu:disable-focused-file-items', function () {
-  // appMenu.updateMenuItem('file,reveal-in-finder', { enabled: false });
+  appMenu.updateMenuItem('edit,reveal-in-finder', { enabled: false });
   // appMenu.updateMenuItem('edit,revert-to-original', { enabled: false });
   appMenu.updateMenuItem('edit,copy-svg', { enabled: false });
   appMenu.updateMenuItem('edit,copy-svg-datauri', { enabled: false });

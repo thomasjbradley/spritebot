@@ -3,7 +3,7 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const {ipcRenderer, clipboard} = require('electron');
+const {ipcRenderer, clipboard, shell} = require('electron');
 
 const classify = require(__dirname + '/../../../shared/classify');
 const fileHandler = require(__dirname + '/../../lib/file-handler');
@@ -27,9 +27,19 @@ const reset = function () {
   $resultsTable.innerHTML = '';
 };
 
+const resetInterface = function () {
+  reset();
+  $header.removeAttribute('hidden');
+  $main.setAttribute('hidden', true);
+  $saveSpriteSheet.setAttribute('disabled', true);
+  ipcRenderer.send('menu:disable-file-items');
+  ipcRenderer.send('menu:disable-focused-file-items');
+  fileHandler.reset();
+};
+
 const addRow = function (svgObj, opts) {
   let renderedRow = templateHelper.render('row.html', {
-    id: classify(svgObj.path),
+    id: svgObj.id,
     filename: path.parse(svgObj.path).base,
     bytesIn: '…',
     bytesOut: '…',
@@ -40,8 +50,7 @@ const addRow = function (svgObj, opts) {
 };
 
 const updateRow = function (svgObj, opts) {
-  const id = classify(svgObj.path);
-  const elem = document.getElementById(id);
+  const elem = document.getElementById(svgObj.id);
 
   if (opts && opts.status && opts.status == 'computing') {
     elem.querySelector('.status-progress').value = 1;
@@ -69,6 +78,10 @@ const render = function (svgObj, opts) {
   }
 };
 
+const getFocusedFile = function () {
+  return $resultsTable.querySelector('[data-state="focused"]');
+};
+
 const addFiles = function (files) {
   $header.setAttribute('hidden', true);
   fileHandler.add(files, render, getInterfaceOpts());
@@ -77,25 +90,30 @@ const addFiles = function (files) {
   ipcRenderer.send('menu:enable-file-items');
 };
 
+const removeFile = function (tr) {
+  fileHandler.remove(tr.id);
+  tr.parentNode.removeChild(tr);
+  checkIfLastFile();
+};
+
 const removeAllFiles = function () {
-  reset();
-  $header.removeAttribute('hidden');
-  $main.setAttribute('hidden', true);
-  $saveSpriteSheet.setAttribute('disabled', true);
-  ipcRenderer.send('menu:disable-file-items');
-  ipcRenderer.send('menu:disable-focused-file-items');
-  fileHandler.reset();
+  resetInterface();
+}
+
+const checkIfLastFile = function () {
+  let $trTags = $resultsTable.querySelector('tr');
+
+  if (!$trTags || $trTags.length <= 0) resetInterface();
 }
 
 const togglePrettyOutput = function () {
   ipcRenderer.send('menu:set-pretty-output', getInterfaceOpts().pretty);
   reset();
-  fileHandler.reset();
-  fileHandler.process(render, getInterfaceOpts());
+  fileHandler.process(render, getInterfaceOpts(), fileHandler.RE_START_PROCESSOR);
 };
 
 const moveFocus = function (direction) {
-  const current = $resultsTable.querySelector('[data-state="focused"]');
+  const current = getFocusedFile();
   const directionSibling = (direction === 'up') ? 'previousElementSibling' : 'nextElementSibling';
 
   ipcRenderer.send('menu:enable-focused-file-items');
@@ -111,7 +129,13 @@ const moveFocus = function (direction) {
     current[directionSibling].setAttribute('aria-selected', true);
   }
 
-  $resultsTable.querySelector('[data-state="focused"]').scrollIntoViewIfNeeded(false);
+  getFocusedFile().scrollIntoViewIfNeeded(false);
+};
+
+const revealInFinder = function (tr) {
+  const svg = fileHandler.get(tr.id);
+
+  if (svg) shell.showItemInFolder(svg.path);
 };
 
 $body.classList.add(`os-${os.platform()}`);
@@ -162,6 +186,18 @@ $body.addEventListener('mousemove', function (e) {
   $resultsTable.dataset.state = 'scrollable';
 });
 
+$body.addEventListener('click', function (e) {
+  if (e.target.matches('.btn-remove-file')) {
+    removeFile(e.target.closest('tr'));
+    return;
+  }
+
+  if (e.target.matches('.btn-reveal-in-finder')) {
+    revealInFinder(e.target.closest('tr'));
+    return;
+  }
+});
+
 window.addEventListener('will-navigate', function (e) {
   e.preventDefault();
 });
@@ -180,7 +216,7 @@ $saveSpriteSheet.addEventListener('click', function (e) {
 });
 
 $resultsTable.addEventListener('mousedown', function (e) {
-  const current = $resultsTable.querySelector('[data-state="focused"]');
+  const current = getFocusedFile();
   let tr;
 
   if (current) {
@@ -191,6 +227,7 @@ $resultsTable.addEventListener('mousedown', function (e) {
   tr = e.target.closest('tr');
   tr.dataset.state = 'focused';
   tr.setAttribute('aria-selected', true);
+  ipcRenderer.send('menu:enable-focused-file-items');
 });
 
 ipcRenderer.on('app:save-sprite-sheet', function (e, filepath) {
@@ -219,4 +256,12 @@ ipcRenderer.on('app:add-files', function (e, files) {
 
 ipcRenderer.on('app:remove-all-files', function (e) {
   removeAllFiles();
+});
+
+ipcRenderer.on('app:remove-file', function (e) {
+  removeFile(getFocusedFile());
+});
+
+ipcRenderer.on('app:reveal-in-finder', function (e) {
+  revealInFinder(getFocusedFile());
 });

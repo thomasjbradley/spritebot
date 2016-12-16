@@ -49,6 +49,10 @@ const commands = {
     win.send('app:remove-all-files');
   },
 
+  'app:pretty-output': function (menuItem, win) {
+    win.send('app:toggle-pretty-output');
+  },
+
   'app:copy-svg-sprite-sheet': function (menuItem, win) {
     win.send('app:copy-svg-sprite-sheet');
   },

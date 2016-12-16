@@ -7,6 +7,12 @@ const templateHelper = require(__dirname + '/../lib/template-helper');
 
 let sprites = [];
 
+const findIndex = function (id) {
+  return sprites.findIndex(function (item) {
+    return item.id == id;
+  });
+};
+
 const reset = function () {
   sprites = [];
 };
@@ -32,12 +38,19 @@ const convertToSymbol = function (svgObj) {
 };
 
 const append = function (svgObj) {
-  sprites.push(convertToSymbol(svgObj));
+  sprites.push(svgObj);
+};
+
+const remove = function (id) {
+  let index = findIndex(id);
+
+  if (index > -1) sprites.splice(index, 1);
 };
 
 const compile = function (optimizer, next) {
+  let spriteStrings = sprites.map(convertToSymbol);
   let spriteSheet = templateHelper.render('sprite-sheet.xml', {
-    sprites: sprites.join(''),
+    sprites: spriteStrings.join(''),
   }, { noEscape: true });
 
   optimizer(spriteSheet, next);
@@ -46,5 +59,6 @@ const compile = function (optimizer, next) {
 module.exports = {
   reset: reset,
   append: append,
+  remove: remove,
   compile: compile,
 };

@@ -11,6 +11,16 @@
         "type": "separator"
       },
       {
+        "label": "Pretty Output",
+        "id": "pretty-output",
+        "accelerator": "CmdOrCtrl+,",
+        "type": "checkbox",
+        "command": "app:pretty-output"
+      },
+      {
+        "type": "separator"
+      },
+      {
         "label": "Hide Markbot",
         "accelerator": "Command+H",
         "role": "hide"
@@ -128,16 +138,6 @@
         "enabled": false,
         "accelerator": "CmdOrCtrl+Shift+R",
         "command": "app:reveal-in-finder"
-      },
-      {
-        "type": "separator"
-      },
-      {
-        "label": "Pretty Output",
-        "id": "pretty-output",
-        "accelerator": "CmdOrCtrl+Shift+P",
-        "type": "checkbox",
-        "command": "app:pretty-output"
       }
     ]
   },

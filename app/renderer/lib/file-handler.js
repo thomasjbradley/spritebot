@@ -1,5 +1,7 @@
 'use strict';
 
+const RE_START_PROCESSOR = 're-run-processor';
+
 const fs = require('fs');
 const dir = require('node-dir');
 
@@ -12,7 +14,12 @@ const reset = function () {
   svgSpriter.reset();
 };
 
-const processAllFiles = function (renderer, opts) {
+const processAllFiles = function (renderer, opts, restart) {
+  if (restart === RE_START_PROCESSOR) {
+    svgQueue.restart();
+    svgSpriter.reset();
+  }
+
   svgQueue.run(
     svgProcessor.optimize,
     opts,
@@ -65,6 +72,15 @@ const add = function (files, renderer, opts) {
   processAllFiles(renderer, opts);
 };
 
+const get = function (id) {
+  return svgQueue.get(id);
+};
+
+const remove = function (id) {
+  svgQueue.remove(id);
+  svgSpriter.remove(id);
+};
+
 const compile = function (opts, next) {
   opts.sprites = true;
 
@@ -74,8 +90,11 @@ const compile = function (opts, next) {
 };
 
 module.exports = {
+  RE_START_PROCESSOR: RE_START_PROCESSOR,
   reset: reset,
   process: processAllFiles,
   add: add,
+  get: get,
+  remove: remove,
   compile: compile,
 };
