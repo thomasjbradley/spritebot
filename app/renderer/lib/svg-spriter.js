@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const classify = require(__dirname + '/classify');
+const classify = require(__dirname + '/../../shared/classify');
 const templateHelper = require(__dirname + '/../lib/template-helper');
 
 let sprites = [];
@@ -12,7 +12,11 @@ const reset = function () {
 };
 
 const findViewBoxDimensions = function (svg) {
-  return svg.match(/^<svg[^>]*viewBox="([^"]*)"/)[1];
+  const viewBox = svg.match(/^<svg[^>]*viewBox="([^"]*)"/);
+
+  if (!viewBox || !viewBox[1]) return false;
+
+  return viewBox[1];
 };
 
 const findSvgContents = function (svg) {

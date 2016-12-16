@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en-ca">
+<head>
+  <meta charset="utf-8">
+  <title>Spritebot</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+
+  <svg hidden>
+    <symbol id="icon-remove" viewBox="0 0 256 256">
+      <path d="M128 1a127 127 0 1 0 127 127A127 127 0 0 0 128 1zm63 141H65v-27h126z"/>
+    </symbol>
+    <symbol id="icon-reveal" viewBox="0 0 256 256">
+      <circle cx="113.5" cy="112.4" r="36.5" transform="rotate(-45 113.544 112.368)"/>
+      <path d="M128 1a127 127 0 1 0 127 127A127 127 0 0 0 128 1zm50.8 196l-37-37a55.4 55.4 0 1 1 19.1-19l36.9 37z"/>
+    </symbol>
+  </svg>
+
+  <nav role="navigation">
+    <div>
+      <button id="save-sprite-sheet" disabled>Save Sprite Sheet</button>
+    </div>
+    <div>
+      <input type="checkbox" id="pretty-output">
+      <label for="pretty-output">Pretty Output</label>
+    </div>
+  </nav>
+
+  <header id="header" role="banner">
+    <img class="drop-arrow" src="../../images/drop-arrow.svg" alt="">
+    <h1>Drag <abbr title="and">&amp;</abbr> drop SVGs…</h1>
+  </header>
+
+  <main id="main" role="main" hidden>
+    <table>
+      <thead>
+        <tr>
+          <th class="col-status" scope="col" aria-label="Status">&nbsp;</th>
+          <th class="col-file" scope="col">File</th>
+          <th class="col-reveal" scope="col" aria-label="Reveal in Finder">&nbsp;</th>
+          <th class="col-size" scope="col">Size</th>
+          <th class="col-savings" scope="col">Savings</th>
+          <th class="col-remove" scope="col" aria-label="Remove File">&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody id="results-table"></tbody>
+    </table>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

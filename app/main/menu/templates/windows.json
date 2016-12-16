@@ -1,0 +1,22 @@
+template[0].submenu.push(
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Quit',
+        accelerator: 'Ctrl+Q',
+        command: 'app:quit',
+        click: emitMenuCommand,
+      }
+    );
+
+    // Help menu
+    template[3].submenu.push(
+      {
+        type: 'separator'
+      },
+      {
+        label: `Version ${pkg.version}`,
+        enabled: false,
+      }
+    );

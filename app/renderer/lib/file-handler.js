@@ -7,6 +7,11 @@ const svgQueue = require(__dirname + '/svg-queue');
 const svgProcessor = require(__dirname + '/svg-processor');
 const svgSpriter = require(__dirname + '/svg-spriter');
 
+const reset = function () {
+  svgQueue.reset();
+  svgSpriter.reset();
+};
+
 const processAllFiles = function (renderer, opts) {
   svgQueue.run(
     svgProcessor.optimize,
@@ -25,8 +30,7 @@ const processAllFiles = function (renderer, opts) {
 };
 
 const reProcessAllFiles = function (renderer, opts) {
-  svgQueue.reset();
-  svgSpriter.reset();
+  reset();
   processAllFiles(renderer, opts);
 };
 
@@ -47,16 +51,18 @@ const findAllSvgsInFolder = function (folderPath, renderer, next) {
 
 const filesDropped = function (files, renderer, opts) {
   for (let fileOrDir of files) {
-    if (fs.statSync(fileOrDir.path).isDirectory()) {
-      findAllSvgsInFolder(fileOrDir.path, renderer, function () {
+    let filepath = fileOrDir.path || fileOrDir;
+
+    if (fs.statSync(filepath).isDirectory()) {
+      findAllSvgsInFolder(filepath, renderer, function () {
         processAllFiles(renderer, opts);
       });
     } else {
       let svgObj;
 
-      if (path.parse(fileOrDir.path).ext !== '.svg') continue;
+      if (path.parse(filepath).ext !== '.svg') continue;
 
-      svgObj = svgQueue.add(fileOrDir.path);
+      svgObj = svgQueue.add(filepath);
       renderer(svgObj);
     }
   }
@@ -64,16 +70,24 @@ const filesDropped = function (files, renderer, opts) {
   processAllFiles(renderer, opts);
 };
 
-const saveSpriteSheet = function (filepath, opts) {
+const generateSpriteSheet = function (opts, next) {
   opts.sprites = true;
 
   svgSpriter.compile(svgProcessor.generateStringOptimizer(opts), function (sprites) {
+    next(sprites);
+  });
+};
+
+const saveSpriteSheet = function (filepath, opts) {
+  generateSpriteSheet(opts, function (sprites) {
     fs.writeFile(filepath, sprites);
   });
 };
 
 module.exports = {
+  reset: reset,
   processAllFiles: reProcessAllFiles,
   filesDropped: filesDropped,
+  generateSpriteSheet: generateSpriteSheet,
   saveSpriteSheet: saveSpriteSheet,
 };

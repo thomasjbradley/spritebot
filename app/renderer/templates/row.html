@@ -1,0 +1,24 @@
+<tr id="{{id}}">
+  <td class="col-status">
+    <progress class="status-progress" value="0" max="2"></progress>
+  </td>
+  <th class="col-file" scope="row">{{filename}}</th>
+  <td class="col-reveal">
+    <button class="btn-reveal-in-finder btn-seamless" aria-label="Reveal in Finder">
+      <svg class="btn-icon"><use xlink:href="#icon-reveal" /></svg>
+    </button>
+  </td>
+  <td class="col-size">
+    <span class="size-bytes"><data class="size-bytesin">{{bytesIn}}</data> kB</span>
+    <span class="size-arrow" aria-label="reduced to">»</span>
+    <span class="size-bytes"><data class="size-bytesout">{{bytesOut}}</data> kB</span>
+  </td>
+  <td class="col-savings">
+    <strong><data class="savings-value">{{savings}}</data>%</strong>
+  </td>
+  <td class="col-remove">
+    <button class="btn-remove-file btn-seamless" aria-label="Remove File">
+      <svg class="btn-icon"><use xlink:href="#icon-remove" /></svg>
+    </button>
+  </td>
+</tr>
