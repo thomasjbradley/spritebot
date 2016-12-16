@@ -21,6 +21,21 @@ const getDimensionsFromViewBox = function (vb) {
   };
 };
 
+const read = function (svgObj, next) {
+  fs.readFile(svgObj.path, 'utf8', function (err, data) {
+    svgObj = merge(svgObj, {
+      original: data,
+      bytesIn: Buffer.byteLength(data),
+    });
+
+    next(svgObj);
+  });
+};
+
+const save = function (svgObj, next) {
+  fs.writeFile(svgObj.path, (svgObj.reverted) ? svgObj.original : svgObj.optimized, next);
+};
+
 const forceWidthHeight = function (svg) {
   let matches = svg.match(/<svg[^>]+>/);
   let svgTag;
@@ -38,12 +53,28 @@ const forceWidthHeight = function (svg) {
   return svg.replace(matches[0], svgTag);
 };
 
-const postProcess = function (svgString) {
+const forceXmlNs = function (svg) {
+  let matches = svg.match(/<svg[^>]+>/);
+  let svgTag;
+  let dimensions;
+
+  if (!matches || !matches[0]) return svg;
+  if (matches[0].match(/xmlns="[^"]+"/)) return svg;
+
+  svgTag = matches[0];
+  svgTag = svgTag.replace(/>$/, ' xmlns="http://www.w3.org/2000/svg">');
+
+  return svg.replace(matches[0], svgTag);
+};
+
+const postProcess = function (svgString, opts) {
   const processQueue = [
     forceWidthHeight,
+    (!opts.pretty) ? forceXmlNs : false,
   ];
 
   processQueue.forEach(function (func) {
+    if (!func) return;
     svgString = func(svgString);
   });
 
@@ -59,7 +90,7 @@ const processSvgString = function (svgString, opts, next) {
   if (opts.pretty) optimizer = svgoPretty;
 
   optimizer.optimize(svgString, function (svg) {
-    svg = postProcess(svg.data);
+    svg = postProcess(svg.data, opts);
     next(svg);
   });
 };
@@ -71,7 +102,7 @@ const processSvg = function (svgObj, opts, next) {
       bytesOut: Buffer.byteLength(svg),
     });
 
-    fs.writeFile(svgObj.path, svg);
+    save(svgObj);
     next(svgObj);
   });
 };
@@ -88,12 +119,7 @@ const optimize = function (svgObj, opts, before, after) {
   if (svgObj.original) {
     processSvg(svgObj, opts, after);
   } else {
-    fs.readFile(svgObj.path, 'utf8', function (err, data) {
-      svgObj = merge(svgObj, {
-        original: data,
-        bytesIn: Buffer.byteLength(data),
-      });
-
+    read(svgObj, function (svgObj) {
       processSvg(svgObj, opts, after);
     });
   }
@@ -101,5 +127,7 @@ const optimize = function (svgObj, opts, before, after) {
 
 module.exports = {
   getOptimizer: getOptimizer,
+  read: read,
+  save: save,
   optimize: optimize,
 };

@@ -81,6 +81,35 @@ const remove = function (id) {
   svgSpriter.remove(id);
 };
 
+const revert = function (id) {
+  const svgObj = svgQueue.get(id);
+
+  svgObj.reverted = true;
+  svgQueue.update(svgObj);
+  svgProcessor.save(svgObj);
+  svgSpriter.remove(id);
+
+  return svgObj;
+};
+
+const optimize = function (id) {
+  const svgObj = svgQueue.get(id);
+
+  svgObj.reverted = false;
+  svgQueue.update(svgObj);
+  svgProcessor.save(svgObj);
+  svgSpriter.remove(id);
+  svgSpriter.append(svgObj);
+
+  return svgObj;
+};
+
+const minify = function (id, opts, next) {
+  const svgObj = svgQueue.get(id);
+
+  svgProcessor.getOptimizer(opts)(svgObj.original, next);
+};
+
 const compile = function (opts, next) {
   opts.sprites = true;
 
@@ -95,6 +124,9 @@ module.exports = {
   process: processAllFiles,
   add: add,
   get: get,
+  revert: revert,
   remove: remove,
+  minify: minify,
+  optimize: optimize,
   compile: compile,
 };

@@ -106,7 +106,6 @@ ipcMain.on('menu:disable-file-items', function () {
 
 ipcMain.on('menu:enable-focused-file-items', function () {
   appMenu.updateMenuItem('edit,reveal-in-finder', { enabled: true });
-  // appMenu.updateMenuItem('edit,revert-to-original', { enabled: true });
   appMenu.updateMenuItem('edit,copy-svg', { enabled: true });
   appMenu.updateMenuItem('edit,copy-svg-datauri', { enabled: true });
   appMenu.updateMenuItem('edit,remove-file', { enabled: true });
@@ -114,10 +113,21 @@ ipcMain.on('menu:enable-focused-file-items', function () {
 
 ipcMain.on('menu:disable-focused-file-items', function () {
   appMenu.updateMenuItem('edit,reveal-in-finder', { enabled: false });
-  // appMenu.updateMenuItem('edit,revert-to-original', { enabled: false });
+  appMenu.updateMenuItem('edit,revert-to-original', { enabled: false });
+  appMenu.updateMenuItem('edit,re-optimize', { enabled: false });
   appMenu.updateMenuItem('edit,copy-svg', { enabled: false });
   appMenu.updateMenuItem('edit,copy-svg-datauri', { enabled: false });
   appMenu.updateMenuItem('edit,remove-file', { enabled: false });
+});
+
+ipcMain.on('menu:enable-revert-to-original', function () {
+  appMenu.updateMenuItem('edit,revert-to-original', { enabled: true });
+  appMenu.updateMenuItem('edit,re-optimize', { enabled: false });
+});
+
+ipcMain.on('menu:enable-re-optimize', function () {
+  appMenu.updateMenuItem('edit,revert-to-original', { enabled: false });
+  appMenu.updateMenuItem('edit,re-optimize', { enabled: true });
 });
 
 ipcMain.on('menu:disabled-save-sprite-sheet', function () {

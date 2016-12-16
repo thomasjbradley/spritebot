@@ -61,9 +61,21 @@ const updateRow = function (svgObj, opts) {
   }
 
   if (svgObj.bytesOut) {
-    elem.querySelector('.size-bytesout').innerText = sizeHelper.bytesToKilobytes(svgObj.bytesOut);
-    elem.querySelector('.savings-value').innerText = sizeHelper.diffBytesInKilobytes(svgObj.bytesIn, svgObj.bytesOut);
     elem.querySelector('.status-progress').value = 2;
+
+    if (svgObj.reverted) {
+      elem.querySelector('.size-bytesout').innerText = sizeHelper.bytesToKilobytes(svgObj.bytesIn);
+      elem.querySelector('.savings-value').innerText = '0';
+    } else {
+      elem.querySelector('.size-bytesout').innerText = sizeHelper.bytesToKilobytes(svgObj.bytesOut);
+      elem.querySelector('.savings-value').innerText = sizeHelper.diffBytesInKilobytes(svgObj.bytesIn, svgObj.bytesOut);
+    }
+  }
+
+  if (svgObj.reverted) {
+    elem.dataset.reverted = true;
+  } else {
+    elem.dataset.reverted = false;
   }
 };
 
@@ -76,6 +88,25 @@ const render = function (svgObj, opts) {
   } else {
     addRow(svgObj, opts);
   }
+};
+
+const svgToDataUri = function (id, next) {
+  const prefix = 'data:image/svg+xml,';
+
+  fileHandler.minify(id, { pretty: false }, function (svg) {
+    svg = svg
+      .replace(/"/g, '\'')
+      .replace(/%/g, '%25')
+      .replace(/#/g, '%23')
+      .replace(/{/g, '%7B')
+      .replace(/}/g, '%7D')
+      .replace(/</g, '%3C')
+      .replace(/>/g, '%3E')
+      .replace(/\s+/g,' ')
+    ;
+
+    next(prefix + svg);
+  });
 };
 
 const getFocusedFile = function () {
@@ -112,6 +143,14 @@ const togglePrettyOutput = function () {
   fileHandler.process(render, getInterfaceOpts(), fileHandler.RE_START_PROCESSOR);
 };
 
+const toggleRevertOptimizeMenus = function () {
+  if (getFocusedFile().dataset.reverted === 'true') {
+    ipcRenderer.send('menu:enable-re-optimize');
+  } else {
+    ipcRenderer.send('menu:enable-revert-to-original');
+  }
+};
+
 const moveFocus = function (direction) {
   const current = getFocusedFile();
   const directionSibling = (direction === 'up') ? 'previousElementSibling' : 'nextElementSibling';
@@ -130,6 +169,7 @@ const moveFocus = function (direction) {
   }
 
   getFocusedFile().scrollIntoViewIfNeeded(false);
+  toggleRevertOptimizeMenus();
 };
 
 const revealInFinder = function (tr) {
@@ -228,6 +268,7 @@ $resultsTable.addEventListener('mousedown', function (e) {
   tr.dataset.state = 'focused';
   tr.setAttribute('aria-selected', true);
   ipcRenderer.send('menu:enable-focused-file-items');
+  toggleRevertOptimizeMenus();
 });
 
 ipcRenderer.on('app:save-sprite-sheet', function (e, filepath) {
@@ -264,4 +305,32 @@ ipcRenderer.on('app:remove-file', function (e) {
 
 ipcRenderer.on('app:reveal-in-finder', function (e) {
   revealInFinder(getFocusedFile());
+});
+
+ipcRenderer.on('app:copy-svg', function (e) {
+  const svgObj = fileHandler.get(getFocusedFile().id);
+
+  clipboard.writeText(svgObj.optimized);
+});
+
+ipcRenderer.on('app:copy-svg-datauri', function (e) {
+  const tr = getFocusedFile();
+
+  svgToDataUri(getFocusedFile().id, function (datauri) {
+    clipboard.writeText(datauri);
+  });
+});
+
+ipcRenderer.on('app:revert-to-original', function () {
+  const tr = getFocusedFile();
+
+  updateRow(fileHandler.revert(tr.id));
+  toggleRevertOptimizeMenus();
+});
+
+ipcRenderer.on('app:re-optimize', function () {
+  const tr = getFocusedFile();
+
+  updateRow(fileHandler.optimize(tr.id));
+  toggleRevertOptimizeMenus();
 });
