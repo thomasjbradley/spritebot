@@ -292,6 +292,7 @@ ipcRenderer.on('app:focus', function (e) {
 });
 
 ipcRenderer.on('app:add-files', function (e, files) {
+  console.log(files);
   addFiles(files);
 });
 

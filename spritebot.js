@@ -32,7 +32,7 @@ const createMainWindow = function (next) {
   mainWindow.loadURL('file://' + __dirname + '/app/renderer/windows/main/main.html');
   bindMenus();
 
-  if (env === 'development') mainWindow.webContents.openDevTools();
+  /*if (env === 'development') */mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
     mainWindow = null;
@@ -72,12 +72,18 @@ app.on('activate', function () {
   if (mainWindow === null) createMainWindow();
 });
 
-app.on('open-file', function (e, path) {
+app.on('open-file', function (e, filepath) {
   e.preventDefault();
 
-  if (mainWindow === null) createMainWindow(function () {
-    mainWindow.webContents.send('app:file-dropped', path);
-  });
+  if (typeof filepath === 'string') filepath = [filepath];
+
+  if (mainWindow === null) {
+    createMainWindow(function () {
+      mainWindow.webContents.send('app:add-files', filepath);
+    });
+  } else {
+    mainWindow.webContents.send('app:add-files', filepath);
+  }
 });
 
 ipcMain.on('app:show-save-dialog', function (e, arg) {

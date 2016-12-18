@@ -5,6 +5,20 @@
   <key>CFBundleDocumentTypes</key>
   <array>
     <dict>
+      <key>CFBundleTypeExtensions</key>
+      <array>
+        <string>svg</string>
+      </array>
+      <key>CFBundleTypeIconFile</key>
+      <string>build/icon.icns</string>
+      <key>CFBundleTypeName</key>
+      <string>Scalable vector graphics</string>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>LSHandlerRank</key>
+      <string>Alternate</string>
+    </dict>
+    <dict>
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>LSHandlerRank</key>
