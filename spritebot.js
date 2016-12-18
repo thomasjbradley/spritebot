@@ -32,7 +32,7 @@ const createMainWindow = function (next) {
   mainWindow.loadURL('file://' + __dirname + '/app/renderer/windows/main/main.html');
   bindMenus();
 
-  /*if (env === 'development') */mainWindow.webContents.openDevTools();
+  if (env === 'development') mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
     mainWindow = null;
