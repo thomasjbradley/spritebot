@@ -116,6 +116,13 @@
         "command": "app:copy-svg"
       },
       {
+        "label": "Copy SVG “Use” Statement",
+        "id": "copy-svg-use",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Alt+C",
+        "command": "app:copy-svg-use"
+      },
+      {
         "label": "Copy SVG as Data URI",
         "id": "copy-svg-datauri",
         "enabled": false,

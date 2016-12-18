@@ -109,6 +109,12 @@ const svgToDataUri = function (id, next) {
   });
 };
 
+const svgUseStatement = function (id, next) {
+  const filename = document.getElementById(id).querySelector('.col-file').innerHTML.replace(/\.svg$/, '');
+
+  next(`<svg><use xlink:href="#${filename}" /></svg>`);
+};
+
 const getFocusedFile = function () {
   return $resultsTable.querySelector('[data-state="focused"]');
 };
@@ -311,6 +317,14 @@ ipcRenderer.on('app:copy-svg', function (e) {
   const svgObj = fileHandler.get(getFocusedFile().id);
 
   clipboard.writeText(svgObj.optimized);
+});
+
+ipcRenderer.on('app:copy-svg-use', function (e) {
+  const tr = getFocusedFile();
+
+  svgUseStatement(getFocusedFile().id, function (datauri) {
+    clipboard.writeText(datauri);
+  });
 });
 
 ipcRenderer.on('app:copy-svg-datauri', function (e) {
