@@ -36,6 +36,7 @@ const getMenuTemplate = function () {
   let menu;
 
   if (is.macOS()) menu = prepareMenu(require(__dirname + '/templates/macos.json'));
+  if (is.windows()) menu = prepareMenu(require(__dirname + '/templates/windows.json'));
 
   return menu;
 };

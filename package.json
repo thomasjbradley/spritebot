@@ -40,7 +40,6 @@
     "productName": "Spritebot",
     "compression": "maximum",
     "extend-info": "spritebot-extra.plist",
-    "asarUnpack": "vendor",
     "mac": {
       "target": "dmg",
       "category": "public.app-category.developer-tools"
@@ -50,7 +49,7 @@
       "target": "nsis"
     },
     "dmg": {
-      "title": "Install Markbot",
+      "title": "Install Spritebot",
       "iconSize": 100,
       "window": {
         "x": 200,

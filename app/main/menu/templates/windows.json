@@ -1,22 +1,167 @@
-template[0].submenu.push(
+[
+  {
+    "label": "File",
+    "id": "file",
+    "submenu": [
       {
-        type: 'separator'
+        "label": "Add Files…",
+        "accelerator": "CmdOrCtrl+O",
+        "command": "app:add-files"
       },
       {
-        label: 'Quit',
-        accelerator: 'Ctrl+Q',
-        command: 'app:quit',
-        click: emitMenuCommand,
-      }
-    );
-
-    // Help menu
-    template[3].submenu.push(
-      {
-        type: 'separator'
+        "label": "Add Folders…",
+        "accelerator": "CmdOrCtrl+Shift+O",
+        "command": "app:add-folders"
       },
       {
-        label: `Version ${pkg.version}`,
-        enabled: false,
+        "type": "separator"
+      },
+      {
+        "label": "Remove All Files",
+        "id": "remove-all-files",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Backspace",
+        "command": "app:remove-all-files"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "label": "Pretty Output",
+        "id": "pretty-output",
+        "accelerator": "CmdOrCtrl+,",
+        "type": "checkbox",
+        "command": "app:pretty-output"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "label": "Copy SVG Sprite Sheet",
+        "id": "copy-svg-sprite-sheet",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Alt+C",
+        "command": "app:copy-svg-sprite-sheet"
+      },
+      {
+        "label": "Save Sprite Sheet",
+        "id": "save-sprite-sheet",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+S",
+        "command": "app:save-sprite-sheet"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "label": "Quit",
+        "accelerator": "CmdOrCtrl+Q",
+        "command": "app:quit"
       }
-    );
+    ]
+  },
+  {
+    "label": "Edit",
+    "id": "edit",
+    "submenu": [
+      {
+        "label": "Revert to Original",
+        "id": "revert-to-original",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Z",
+        "command": "app:revert-to-original"
+      },
+      {
+        "label": "Re-Optimize",
+        "id": "re-optimize",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Shift+Z",
+        "command": "app:re-optimize"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "label": "Copy SVG",
+        "id": "copy-svg",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+C",
+        "command": "app:copy-svg"
+      },
+      {
+        "label": "Copy SVG as Data URI",
+        "id": "copy-svg-datauri",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Shift+C",
+        "command": "app:copy-svg-datauri"
+      },
+      {
+        "label": "Remove File",
+        "id": "remove-file",
+        "enabled": false,
+        "accelerator": "Backspace",
+        "command": "app:remove-file"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "label": "Reveal in Finder",
+        "id": "reveal-in-finder",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Shift+R",
+        "command": "app:reveal-in-finder"
+      }
+    ]
+  },
+  {
+    "label": "Window",
+    "id": "window",
+    "role": "window",
+    "submenu": [
+      {
+        "label": "Minimize",
+        "accelerator": "CmdOrCtrl+M",
+        "role": "minimize"
+      },
+      {
+        "label": "Close",
+        "accelerator": "CmdOrCtrl+W",
+        "role": "close"
+      }
+    ]
+  },
+  {
+    "label": "Help",
+    "id": "help",
+    "role": "help",
+    "submenu": [
+      {
+        "label": "Version {{version}}",
+        "enabled": false
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "label": "Spritebot License",
+        "command": "app:spritebot-license"
+      },
+      {
+        "label": "Spritebot Website",
+        "command": "app:spritebot-website"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "label": "Spritebot Support",
+        "command": "app:spritebot-support"
+      },
+      {
+        "label": "Send Feedback…",
+        "command": "app:send-feedback"
+      }
+    ]
+  }
+]

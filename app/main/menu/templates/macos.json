@@ -22,12 +22,12 @@
       },
       {
         "label": "Hide Markbot",
-        "accelerator": "Command+H",
+        "accelerator": "CmdOrCtrl+H",
         "role": "hide"
       },
       {
         "label": "Hide Others",
-        "accelerator": "Command+Alt+H",
+        "accelerator": "CmdOrCtrl+Alt+H",
         "role": "hideothers"
       },
       {
@@ -39,7 +39,7 @@
       },
       {
         "label": "Quit",
-        "accelerator": "Command+Q",
+        "accelerator": "CmdOrCtrl+Q",
         "command": "app:quit"
       }
     ]

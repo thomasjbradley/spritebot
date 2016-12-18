@@ -21,7 +21,7 @@ const bindMenus = function () {
 
 const createMainWindow = function (next) {
   mainWindow = new BrowserWindow({
-    width: 600,
+    width: 700,
     minWidth: 600,
     height: 400,
     show: false,
