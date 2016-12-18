@@ -20,10 +20,55 @@
     "electron-builder": "^10.5.0"
   },
   "scripts": {
-    "start": "NODE_ENV=development electron spritebot.js"
+    "debug": "NODE_ENV=development electron spritebot.js",
+    "start": "NODE_ENV=production electron spritebot.js",
+    "pack-mac": "build -m --dir",
+    "pack-win": "build -w --dir",
+    "pack": "build -mw --dir",
+    "pack-bg": "tiffutil -cathidpicheck ./build/background.png ./build/background@2x.png -out ./build/background.tiff",
+    "build-mac": "npm run pack-bg && build -m",
+    "build-win": "build -w",
+    "build": "npm run build-mac && npm run build-win"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/thomasjbradley/spritebot.git"
+  },
+  "build": {
+    "appId": "ca.thomasjbradley.spritebot",
+    "copyright": "© Thomas J Bradley",
+    "productName": "Spritebot",
+    "compression": "maximum",
+    "extend-info": "spritebot-extra.plist",
+    "asarUnpack": "vendor",
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "iconUrl": "https://raw.githubusercontent.com/thomasjbradley/spritebot/master/build/icon.ico",
+      "target": "nsis"
+    },
+    "dmg": {
+      "title": "Install Markbot",
+      "iconSize": 100,
+      "window": {
+        "x": 200,
+        "y": 200
+      },
+      "contents": [
+        {
+          "x": 494,
+          "y": 270,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 210,
+          "y": 270,
+          "type": "file"
+        }
+      ]
+    }
   }
 }
