@@ -75,7 +75,7 @@
         "label": "Copy SVG Sprite Sheet",
         "id": "copy-svg-sprite-sheet",
         "enabled": false,
-        "accelerator": "CmdOrCtrl+Alt+C",
+        "accelerator": "CmdOrCtrl+Shift+S",
         "command": "app:copy-svg-sprite-sheet"
       },
       {
