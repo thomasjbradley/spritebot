@@ -18,8 +18,8 @@ Built with Javascript, Node.js & Electron.
 
 Download the latest version of Spritebot below:
 
-### [⬇ MacOS](https://github.com/thomasjbradley/spritebot/releases/download/v1.1.0/Spritebot-1.1.0.dmg)
-### [⬇ Windows](https://github.com/thomasjbradley/spritebot/releases/download/v1.1.0/Spritebot-Setup-1.1.0.exe)
+### [⬇ MacOS](https://github.com/thomasjbradley/spritebot/releases/download/v1.1.1/Spritebot-1.1.1.dmg)
+### [⬇ Windows](https://github.com/thomasjbradley/spritebot/releases/download/v1.1.1/Spritebot-Setup-1.1.1.exe)
 
 ---
 
