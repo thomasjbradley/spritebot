@@ -5,6 +5,14 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## [1.1.1] — 2017-01-02
+
+### Fixed
+
+- The file sizes wrapped sometimes when larger.
+
+---
+
 ## [1.1.0] — 2016-12-18
 
 ### Added

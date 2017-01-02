@@ -286,7 +286,7 @@ table tbody tr:only-of-type {
 }
 
 .col-size {
-  width: 13rem;
+  width: 14rem;
 
   text-align: center;
 }
@@ -391,6 +391,7 @@ tr[data-state="focused"]:nth-child(even) {
   display: inline-block;
   padding: 0 .4em;
   width: 5.6em;
+  white-space: nowrap;
 }
 
 .size-bytes:first-child {
