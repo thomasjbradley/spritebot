@@ -123,10 +123,17 @@
         "command": "app:copy-svg-use"
       },
       {
+        "label": "Copy SVG as “Symbol”",
+        "id": "copy-svg-symbol",
+        "enabled": false,
+        "accelerator": "CmdOrCtrl+Shift+C",
+        "command": "app:copy-svg-symbol"
+      },
+      {
         "label": "Copy SVG as Data URI",
         "id": "copy-svg-datauri",
         "enabled": false,
-        "accelerator": "CmdOrCtrl+Shift+C",
+        "accelerator": "CmdOrCtrl+Alt+Shift+C",
         "command": "app:copy-svg-datauri"
       },
       {

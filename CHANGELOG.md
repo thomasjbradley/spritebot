@@ -5,6 +5,14 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## [1.2.0] — 2017-01-13
+
+### Added
+
+- A menu item for `Copy SVG as “Symbol”` that will always copy a pretty `<symbol>` tag with the correct ID.
+
+---
+
 ## [1.1.1] — 2017-01-02
 
 ### Fixed

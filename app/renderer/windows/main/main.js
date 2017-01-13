@@ -90,6 +90,26 @@ const render = function (svgObj, opts) {
   }
 };
 
+const svgUseStatement = function (id, next) {
+  const filename = document.getElementById(id).querySelector('.col-file').innerHTML.replace(/\.svg$/, '');
+
+  next(`<svg><use xlink:href="#${filename}" /></svg>`);
+};
+
+const svgSymbol = function (id, next) {
+  const filename = document.getElementById(id).querySelector('.col-file').innerHTML.replace(/\.svg$/, '');
+
+  fileHandler.minify(id, { pretty: true }, function (svg) {
+    svg = svg
+      .replace(/\<svg/, `<symbol id="${filename}"`)
+      .replace(/\<\/svg/, '</symbol')
+      .replace(/ (width|height)="\d+"/g, '')
+    ;
+
+    next(svg);
+  });
+};
+
 const svgToDataUri = function (id, next) {
   const prefix = 'data:image/svg+xml,';
 
@@ -107,12 +127,6 @@ const svgToDataUri = function (id, next) {
 
     next(prefix + svg);
   });
-};
-
-const svgUseStatement = function (id, next) {
-  const filename = document.getElementById(id).querySelector('.col-file').innerHTML.replace(/\.svg$/, '');
-
-  next(`<svg><use xlink:href="#${filename}" /></svg>`);
 };
 
 const getFocusedFile = function () {
@@ -323,6 +337,14 @@ ipcRenderer.on('app:copy-svg-use', function (e) {
   const tr = getFocusedFile();
 
   svgUseStatement(getFocusedFile().id, function (datauri) {
+    clipboard.writeText(datauri);
+  });
+});
+
+ipcRenderer.on('app:copy-svg-symbol', function (e) {
+  const tr = getFocusedFile();
+
+  svgSymbol(getFocusedFile().id, function (datauri) {
     clipboard.writeText(datauri);
   });
 });

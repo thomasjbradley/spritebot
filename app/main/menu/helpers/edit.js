@@ -16,6 +16,10 @@ const commands = {
     win.send('app:copy-svg');
   },
 
+  'app:copy-svg-symbol': function (menuItem, win) {
+    win.send('app:copy-svg-symbol');
+  },
+
   'app:copy-svg-use': function (menuItem, win) {
     win.send('app:copy-svg-use');
   },

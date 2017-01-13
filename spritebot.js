@@ -114,6 +114,7 @@ ipcMain.on('menu:enable-focused-file-items', function () {
   appMenu.updateMenuItem('edit,reveal-in-finder', { enabled: true });
   appMenu.updateMenuItem('edit,copy-svg', { enabled: true });
   appMenu.updateMenuItem('edit,copy-svg-use', { enabled: true });
+  appMenu.updateMenuItem('edit,copy-svg-symbol', { enabled: true });
   appMenu.updateMenuItem('edit,copy-svg-datauri', { enabled: true });
   appMenu.updateMenuItem('edit,remove-file', { enabled: true });
 });
@@ -124,6 +125,7 @@ ipcMain.on('menu:disable-focused-file-items', function () {
   appMenu.updateMenuItem('edit,re-optimize', { enabled: false });
   appMenu.updateMenuItem('edit,copy-svg', { enabled: false });
   appMenu.updateMenuItem('edit,copy-svg-use', { enabled: false });
+  appMenu.updateMenuItem('edit,copy-svg-symbol', { enabled: false });
   appMenu.updateMenuItem('edit,copy-svg-datauri', { enabled: false });
   appMenu.updateMenuItem('edit,remove-file', { enabled: false });
 });
