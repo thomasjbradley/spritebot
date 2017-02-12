@@ -101,6 +101,7 @@ const svgSymbol = function (id, next) {
 
   fileHandler.minify(id, { pretty: true }, function (svg) {
     svg = svg
+      .replace(/\<svg([^>])\s*id="[^"]+"/, '<svg$1')
       .replace(/\<svg/, `<symbol id="${filename}"`)
       .replace(/\<\/svg/, '</symbol')
       .replace(/ (width|height)="\d+"/g, '')
