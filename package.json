@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "electron": "^1.4.10",
-    "electron-builder": "^10.5.0"
+    "electron-builder": "^13.5.0"
   },
   "scripts": {
     "debug": "NODE_ENV=development electron spritebot.js",
@@ -45,8 +45,8 @@
       "category": "public.app-category.developer-tools"
     },
     "win": {
-      "iconUrl": "https://raw.githubusercontent.com/thomasjbradley/spritebot/master/build/icon.ico",
-      "target": "nsis"
+      "target": "nsis",
+      "license": "LICENSE"
     },
     "dmg": {
       "title": "Install Spritebot",

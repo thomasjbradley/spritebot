@@ -1,6 +1,6 @@
 [
   {
-    "label": "Markbot",
+    "label": "Spritebot",
     "id": "app",
     "submenu": [
       {
@@ -21,7 +21,7 @@
         "type": "separator"
       },
       {
-        "label": "Hide Markbot",
+        "label": "Hide Spritebot",
         "accelerator": "CmdOrCtrl+H",
         "role": "hide"
       },
