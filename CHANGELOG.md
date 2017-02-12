@@ -7,6 +7,10 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.2.1] — 2017-02-11
 
+### Changed
+
+- Signed the app with an Apple Developer Certificate.
+
 ### Fixed
 
 - Removed duplicate `id=""` attributes from the `<svg` tag.
