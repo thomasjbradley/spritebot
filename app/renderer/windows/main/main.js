@@ -314,6 +314,7 @@ ipcRenderer.on('app:focus', function (e) {
 
 ipcRenderer.on('app:add-files', function (e, files) {
   addFiles(files);
+  ipcRenderer.send('app:clear-file-list');
 });
 
 ipcRenderer.on('app:remove-all-files', function (e) {

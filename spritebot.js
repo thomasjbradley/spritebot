@@ -12,6 +12,7 @@ const env = process.env.NODE_ENV;
 
 let appPkg = require(__dirname + '/package.json');
 let mainWindow;
+let droppedFiles = [];
 
 const bindMenus = function () {
   menuFile.bind(appMenu, mainWindow.id);
@@ -75,15 +76,19 @@ app.on('activate', function () {
 app.on('open-file', function (e, filepath) {
   e.preventDefault();
 
-  if (typeof filepath === 'string') filepath = [filepath];
+  if (typeof filepath === 'string') droppedFiles.push(filepath);
 
   if (mainWindow === null) {
     createMainWindow(function () {
-      mainWindow.webContents.send('app:add-files', filepath);
+      mainWindow.webContents.send('app:add-files', JSON.parse(JSON.stringify(droppedFiles)));
     });
   } else {
-    mainWindow.webContents.send('app:add-files', filepath);
+    mainWindow.webContents.send('app:add-files', JSON.parse(JSON.stringify(droppedFiles)));
   }
+});
+
+ipcMain.on('app:clear-file-list', () => {
+  droppedFiles = [];
 });
 
 ipcMain.on('app:show-save-dialog', function (e, arg) {
