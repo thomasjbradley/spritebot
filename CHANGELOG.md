@@ -5,6 +5,17 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## [1.2.1] — 2017-02-11
+
+### Fixed
+
+- Removed duplicate `id=""` attributes from the `<svg` tag.
+- Added some Illustrator fixes to remove all the `data-name=""` attributes from the SVG code.
+- Prevent the images from being dragged, making the app seem more like a website.
+- Fixed a bug when the main window is closed, and multiple files are dropped, only the last one would compress.
+
+---
+
 ## [1.2.0] — 2017-01-13
 
 ### Added
