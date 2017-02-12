@@ -67,10 +67,27 @@ const forceXmlNs = function (svg) {
   return svg.replace(matches[0], svgTag);
 };
 
+const removeAllDataNameAttrs = function (svg) {
+  return svg.replace(/\s*data-name="[^"]+"/g, '');
+};
+
 const postProcess = function (svgString, opts) {
   const processQueue = [
     forceWidthHeight,
     (!opts.pretty) ? forceXmlNs : false,
+  ];
+
+  processQueue.forEach(function (func) {
+    if (!func) return;
+    svgString = func(svgString);
+  });
+
+  return svgString;
+};
+
+const preProcess = function (svgString) {
+  const processQueue = [
+    removeAllDataNameAttrs,
   ];
 
   processQueue.forEach(function (func) {
@@ -89,7 +106,7 @@ const processSvgString = function (svgString, opts, next) {
   if (opts.sprites) optimizer = svgoSpriteMin;
   if (opts.pretty) optimizer = svgoPretty;
 
-  optimizer.optimize(svgString, function (svg) {
+  optimizer.optimize(preProcess(svgString), function (svg) {
     svg = postProcess(svg.data, opts);
     next(svg);
   });
