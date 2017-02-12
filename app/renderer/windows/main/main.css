@@ -43,6 +43,12 @@ body {
   display: none !important;
 }
 
+img,
+svg,
+button * {
+  pointer-events: none;
+}
+
 nav {
   align-items: center;
   display: flex;
