@@ -5,6 +5,14 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## [1.2.2] — 2017-03-22
+
+### Changed
+
+- Changed the button focus styles to be more nicely styled and not quite as abrasive.
+
+---
+
 ## [1.2.1] — 2017-02-11
 
 ### Changed

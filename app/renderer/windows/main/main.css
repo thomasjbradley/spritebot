@@ -86,8 +86,9 @@ button:not(.btn-seamless) {
 }
 
 button:focus {
-  outline: var(--control-outline);
-  outline-offset: var(--control-outline-offset);
+  outline: 0;
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, .5);
 }
 
 button:not(.btn-seamless):active {
@@ -119,16 +120,31 @@ button[disabled] {
   fill: currentColor;
 }
 
+.btn-seamless:focus {
+  box-shadow: none;
+}
+
+.btn-seamless:focus .btn-icon {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, .5);
+}
+
+tr[data-state="focused"] .btn-seamless:focus .btn-icon {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .9);
+}
+
 .btn-icon {
   height: 16px;
   width: 16px;
   overflow: hidden;
 
   border-radius: 50%;
+}
+
+.btn-icon use {
   opacity: .2;
 }
 
-tr[data-state="focused"] .btn-icon {
+tr[data-state="focused"] .btn-icon use {
   opacity: .5;
 }
 
@@ -166,7 +182,7 @@ input[type="checkbox"] + label::after {
   border-radius: 32px;
   border: 1px solid var(--control-border-color-darker);
   transform: translateY(-50%);
-  transition: all 100ms linear;
+  transition: background-color 100ms linear, border 100ms linear;
 }
 
 input[type="checkbox"] + label::before {
@@ -196,8 +212,12 @@ input[type="checkbox"]:checked + label::before {
 }
 
 input[type="checkbox"]:focus + label {
-  outline: var(--control-outline);
-  outline-offset: var(--control-outline-offset);
+  outline: 0;
+  outline-offset: 0;
+}
+
+input[type="checkbox"]:focus + label::after {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, .5);
 }
 
 header {
@@ -423,5 +443,8 @@ tr[data-state="focused"]:nth-child(even) {
 
 .btn-remove-file:hover .btn-icon {
   background-color: #fff;
+}
+
+.btn-remove-file:hover .btn-icon use {
   opacity: 1;
 }
