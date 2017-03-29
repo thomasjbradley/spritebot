@@ -43,6 +43,37 @@ body {
   display: none !important;
 }
 
+.image-replacement, .ir {
+  overflow: hidden;
+  direction: ltr;
+  text-align: left;
+  text-indent: 100%;
+  white-space: nowrap;
+}
+
+.icon {
+  display: inline-block;
+  position: relative;
+  background: transparent none no-repeat center center;
+  background-size: contain;
+  vertical-align: middle;
+}
+
+.i-16, .i--16 {
+  height: 16px;
+  width: 16px;
+}
+
+.icon img,
+.icon svg {
+  left: 0;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  fill: currentColor;
+}
+
 img,
 svg,
 button * {
@@ -73,6 +104,10 @@ button * {
 }
 
 button:not(.btn-seamless) {
+  display: inline-flex;
+  justify-content: center;
+  align-content: center;
+  height: 2.2em;
   padding: var(--control-padding);
 
   background-color: #f8f8f8;
@@ -83,6 +118,7 @@ button:not(.btn-seamless) {
   box-shadow: 0px 1px 0px rgba(100, 100, 100, .1);
 
   font-size: var(--control-font-size);
+  vertical-align: middle;
 }
 
 button:focus {
@@ -104,6 +140,10 @@ button:not(.btn-seamless):active {
 .window-blurred button:not(.btn-seamless),
 button[disabled] {
   opacity: .5;
+}
+
+button .icon {
+  opacity: .7;
 }
 
 .btn-seamless {
@@ -225,7 +265,21 @@ header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+
   text-align: center;
+}
+
+.drag-n-drop-label {
+  display: inline-block;
+  margin: .15em 0 0 .4em;
+
+  font-size: .8125rem;
+  vertical-align: middle;
+}
+
+.window-blurred .drag-n-drop-label {
+  opacity: .4;
 }
 
 .drop-arrow {
@@ -447,4 +501,44 @@ tr[data-state="focused"]:nth-child(even) {
 
 .btn-remove-file:hover .btn-icon use {
   opacity: 1;
+}
+
+#robot-bust-wrap {
+  bottom: -39px;
+  left: 2.9em;
+  position: absolute;
+  width: 96px;
+}
+
+#robot-speech {
+  left: 50%;
+  margin: 0;
+  padding: 4px 0;
+  position: absolute;
+  top: -1.7em;
+  width: 12em;
+
+  background-color: rgba(0, 0, 0, .16);
+  border-radius: var(--control-border-radius);
+  transform: translateX(-50%);
+
+  color: #fff;
+  font-size: 11px;
+  text-align: center;
+}
+
+#robot-speech-triangle {
+  bottom: -8px;
+  left: 50%;
+  position: absolute;
+  width: 16px;
+
+  opacity: .16;
+  transform: translateX(-50%);
+}
+
+#robot-bust {
+  width: 100%;
+
+  opacity: .16;
 }

@@ -27,16 +27,6 @@
         "type": "separator"
       },
       {
-        "label": "Pretty Output",
-        "id": "pretty-output",
-        "accelerator": "CmdOrCtrl+,",
-        "type": "checkbox",
-        "command": "app:pretty-output"
-      },
-      {
-        "type": "separator"
-      },
-      {
         "label": "Copy SVG Sprite Sheet",
         "id": "copy-svg-sprite-sheet",
         "enabled": false,

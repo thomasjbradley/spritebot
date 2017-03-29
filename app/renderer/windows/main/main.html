@@ -19,9 +19,22 @@
 
   <nav role="navigation">
     <div>
-      <button id="save-sprite-sheet" disabled>Save Sprite Sheet</button>
+      <button id="add-svgs" aria-label="Add SVGs" title="Add SVGs">
+        <icon class="icon i-16">
+          <svg id="plus" viewBox="0 0 256 256">
+           <rect width="35.3" height="173.67" x="110.3" y="41.2"/>
+           <rect width="35.3" height="173.67" x="110.3" y="41.2" transform="rotate(90 128 128)"/>
+          </svg>
+        </icon>
+      </button>
+      <p class="drag-n-drop-label">Drag <abbr title="and">&amp;</abbr> drop SVGs…</p>
     </div>
     <div>
+      <button id="save-sprite-sheet" disabled>
+        <span>Save Sprite Sheet</span>
+      </button>
+    </div>
+    <div hidden>
       <input type="checkbox" id="pretty-output">
       <label for="pretty-output">Pretty Output</label>
     </div>
@@ -30,6 +43,31 @@
   <header id="header" role="banner">
     <img class="drop-arrow" src="../../images/drop-arrow.svg" alt="">
     <h1>Drag <abbr title="and">&amp;</abbr> drop SVGs…</h1>
+    <div id="robot-bust-wrap">
+      <p id="robot-speech">
+        <span>All systems ready.</span>
+        <svg id="robot-speech-triangle" viewBox="0 0 256 140">
+          <polygon fill="#000" points="128 134.4 2.9 -1.8 253.1 -1.8 128 134.4"/>
+        </svg>
+      </p>
+      <svg id="robot-bust" viewBox="0 0 512 512">
+        <rect width="39.9" height="9.87" x="236.1" y="115.6" rx="4.1" ry="4.1" transform="rotate(-180 256 120.55)"/>
+        <rect width="25.1" height="9.87" x="243.5" y="129.8" rx="4.1" ry="4.1" transform="rotate(-180 256 134.7)"/>
+        <rect width="25.1" height="9.87" x="243.5" y="101.4" rx="4.1" ry="4.1" transform="rotate(180 256 106.35)"/>
+        <path d="M261 196V99.6a5.5 5.5 0 0 0-11 0V196z"/>
+        <path d="M255.7 150.9c-21.5 0-38.9 9.6-38.9 21.3s17.4 21.3 38.9 21.3 38.9-9.6 38.9-21.3-17.4-21.3-38.9-21.3z"/>
+        <circle cx="256" cy="275.7" r="14.1"/>
+        <path d="M214 266.8c0-7.1 6.7-11.8 13.8-11.8h55.7c7.1 0 11.5 4.7 11.5 11.8V284h56.4L336 190a23 23 0 0 0-22.8-23H198.1a23 23 0 0 0-22.8 23L160 284h54zm80.6-66.7a10.6 10.6 0 1 1-10.6 10.6 10.6 10.6 0 0 1 10.6-10.6zm-38.9 0a10.6 10.6 0 1 1-10.6 10.6 10.6 10.6 0 0 1 10.6-10.6zm-49.5 10.6a10.6 10.6 0 1 1 10.6 10.6 10.6 10.6 0 0 1-10.7-10.6z"/>
+        <path d="M353.7 298h-196l-12.3 75.2a22.8 22.8 0 0 0 22.7 22.8h175.1a22.8 22.8 0 0 0 22.8-22.8zM305 382H205v-64h100z"/>
+        <rect width="11" height="44" x="261" y="328"/>
+        <rect width="11" height="44" x="238" y="328"/>
+        <rect width="9" height="44" x="216" y="328"/>
+        <rect width="9" height="44" x="285" y="328"/>
+        <path d="M119.5 190.7a20 20 0 1 0 18.6 27.3h25.4l2.5-15h-28.1a20 20 0 0 0-18.4-12.3zm0 30.6a10.6 10.6 0 1 1 10.6-10.6 10.6 10.6 0 0 1-10.6 10.6z"/>
+        <path d="M391.9 189.8a20 20 0 0 0-18.8 13.2h-27.8l2.5 15h25.8a20 20 0 1 0 18.3-28.2zm0 30.6a10.6 10.6 0 1 1 10.6-10.6 10.6 10.6 0 0 1-10.6 10.6z"/>
+        <polygon points="350 414.8 341.6 406 295 406 295 413 216 413 216 406 169.4 406 161 414.8 161 495 350 495 350 414.8"/>
+      </svg>
+    </div>
   </header>
 
   <main id="main" role="main" hidden>

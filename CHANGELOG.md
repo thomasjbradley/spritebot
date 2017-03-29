@@ -5,6 +5,31 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## [Unreleased] — 2017-03-29
+
+### Added
+
+- Because there is no more “Pretty” toggle, the nav bar looked imbalanced so I added a “Add” button.
+
+### Changed
+
+- Remove the “Pretty” option and made it so the “Copy” commands all output pretty. Based on user-testing this is the most likely use-case, and the “Pretty” toggle was confusing users.
+
+---
+
+## [1.2.3] — 2017-03-28
+
+### Changed
+
+- Added a small robot illustration to the start screen to differentiate Spritebot from the other Toolbots.
+
+### Fixed
+
+- Fixed a double-spacing bug when adding IDs to the `<svg>` tag.
+- The correct ID is now added to the SVG when copied in pretty mode.
+
+---
+
 ## [1.2.2] — 2017-03-22
 
 ### Changed

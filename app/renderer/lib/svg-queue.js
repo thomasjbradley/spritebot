@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const merge = require('merge-objects');
 
 const classify = require(__dirname + '/../../shared/classify');
@@ -34,18 +35,20 @@ const run = function (processor, opts, before, after) {
   run(processor, opts, before, after);
 };
 
-const getByPath = function (path) {
+const getByPath = function (filepath) {
   return svgs.find(function (item) {
-    return item.path == path;
+    return item.path == filepath;
   });
 };
 
-const add = function (path) {
+const add = function (filepath) {
   let svgObj = {
-    id: classify(path),
-    path: path,
+    id: classify(filepath),
+    path: filepath,
+    filename: path.parse(filepath).base,
+    filenamePretty: classify(path.parse(filepath).base.replace(/\.svg$/, '')),
   };
-  let prevSvgObj = getByPath(path);
+  let prevSvgObj = getByPath(filepath);
 
   if (prevSvgObj) return prevSvgObj;
 

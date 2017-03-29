@@ -14,14 +14,8 @@ const $body = document.body;
 const $header = document.getElementById('header');
 const $main = document.getElementById('main');
 const $resultsTable = document.getElementById('results-table');
-const $prettyOutput = document.getElementById('pretty-output');
+const $addSvgs = document.getElementById('add-svgs');
 const $saveSpriteSheet = document.getElementById('save-sprite-sheet');
-
-const getInterfaceOpts = function () {
-  return {
-    pretty: $prettyOutput.checked,
-  };
-};
 
 const reset = function () {
   $resultsTable.innerHTML = '';
@@ -40,7 +34,7 @@ const resetInterface = function () {
 const addRow = function (svgObj, opts) {
   let renderedRow = templateHelper.render('row.html', {
     id: svgObj.id,
-    filename: path.parse(svgObj.path).base,
+    filename: svgObj.filename,
     bytesIn: '…',
     bytesOut: '…',
     savings: '…',
@@ -90,21 +84,36 @@ const render = function (svgObj, opts) {
   }
 };
 
-const svgUseStatement = function (id, next) {
-  const filename = document.getElementById(id).querySelector('.col-file').innerHTML.replace(/\.svg$/, '');
-
-  next(`<svg><use xlink:href="#${filename}" /></svg>`);
-};
-
-const svgSymbol = function (id, next) {
-  const filename = document.getElementById(id).querySelector('.col-file').innerHTML.replace(/\.svg$/, '');
+const svgWhole = function (id, next) {
+  const svgObj = fileHandler.get(id);
 
   fileHandler.minify(id, { pretty: true }, function (svg) {
     svg = svg
       .replace(/\<svg([^>])\s*id="[^"]+"/, '<svg$1')
-      .replace(/\<svg/, `<symbol id="${filename}"`)
+      .replace(/\<svg/, `<svg id="${svgObj.filenamePretty}"`)
+      .replace(/ +/g, ' ')
+    ;
+
+    next(svg);
+  });
+};
+
+const svgUseStatement = function (id, next) {
+  const svgObj = fileHandler.get(id);
+
+  next(`<svg><use xlink:href="#${svgObj.filenamePretty}" /></svg>`);
+};
+
+const svgSymbol = function (id, next) {
+  const svgObj = fileHandler.get(id);
+
+  fileHandler.minify(id, { pretty: true }, function (svg) {
+    svg = svg
+      .replace(/\<svg([^>])\s*id="[^"]+"/, '<svg$1')
+      .replace(/\<svg/, `<symbol id="${svgObj.filenamePretty}"`)
       .replace(/\<\/svg/, '</symbol')
       .replace(/ (width|height)="\d+"/g, '')
+      .replace(/ +/g, ' ')
     ;
 
     next(svg);
@@ -136,7 +145,7 @@ const getFocusedFile = function () {
 
 const addFiles = function (files) {
   $header.setAttribute('hidden', true);
-  fileHandler.add(files, render, getInterfaceOpts());
+  fileHandler.add(files, render, { pretty: false });
   $main.removeAttribute('hidden');
   $saveSpriteSheet.removeAttribute('disabled');
   ipcRenderer.send('menu:enable-file-items');
@@ -157,12 +166,6 @@ const checkIfLastFile = function () {
 
   if (!$trTags || $trTags.length <= 0) resetInterface();
 }
-
-const togglePrettyOutput = function () {
-  ipcRenderer.send('menu:set-pretty-output', getInterfaceOpts().pretty);
-  reset();
-  fileHandler.process(render, getInterfaceOpts(), fileHandler.RE_START_PROCESSOR);
-};
 
 const toggleRevertOptimizeMenus = function () {
   if (getFocusedFile().dataset.reverted === 'true') {
@@ -263,17 +266,12 @@ window.addEventListener('will-navigate', function (e) {
   e.preventDefault();
 });
 
-$prettyOutput.addEventListener('change', function (e) {
-  togglePrettyOutput();
-});
-
-ipcRenderer.on('app:toggle-pretty-output', function () {
-  $prettyOutput.checked = !$prettyOutput.checked;
-  togglePrettyOutput();
-});
-
 $saveSpriteSheet.addEventListener('click', function (e) {
   ipcRenderer.send('app:show-save-dialog');
+});
+
+$addSvgs.addEventListener('click', function (e) {
+  ipcRenderer.send('app:show-add-dialog');
 });
 
 $resultsTable.addEventListener('mousedown', function (e) {
@@ -293,13 +291,13 @@ $resultsTable.addEventListener('mousedown', function (e) {
 });
 
 ipcRenderer.on('app:save-sprite-sheet', function (e, filepath) {
-  fileHandler.compile(getInterfaceOpts(), function (sprites) {
+  fileHandler.compile({ pretty: false }, function (sprites) {
     fs.writeFile(filepath, sprites);
   });
 });
 
 ipcRenderer.on('app:copy-svg-sprite-sheet', function (e) {
-  fileHandler.compile(getInterfaceOpts(), function (sprites) {
+  fileHandler.compile({ pretty: true }, function (sprites) {
     clipboard.writeText(sprites);
   });
 });
@@ -330,45 +328,35 @@ ipcRenderer.on('app:reveal-in-finder', function (e) {
 });
 
 ipcRenderer.on('app:copy-svg', function (e) {
-  const svgObj = fileHandler.get(getFocusedFile().id);
-
-  clipboard.writeText(svgObj.optimized);
+  svgWhole(getFocusedFile().id, function (svg) {
+    clipboard.writeText(svg);
+  });
 });
 
 ipcRenderer.on('app:copy-svg-use', function (e) {
-  const tr = getFocusedFile();
-
-  svgUseStatement(getFocusedFile().id, function (datauri) {
-    clipboard.writeText(datauri);
+  svgUseStatement(getFocusedFile().id, function (svg) {
+    clipboard.writeText(svg);
   });
 });
 
 ipcRenderer.on('app:copy-svg-symbol', function (e) {
-  const tr = getFocusedFile();
-
-  svgSymbol(getFocusedFile().id, function (datauri) {
-    clipboard.writeText(datauri);
+  svgSymbol(getFocusedFile().id, function (svg) {
+    clipboard.writeText(svg);
   });
 });
 
 ipcRenderer.on('app:copy-svg-datauri', function (e) {
-  const tr = getFocusedFile();
-
-  svgToDataUri(getFocusedFile().id, function (datauri) {
-    clipboard.writeText(datauri);
+  svgToDataUri(getFocusedFile().id, function (svg) {
+    clipboard.writeText(svg);
   });
 });
 
 ipcRenderer.on('app:revert-to-original', function () {
-  const tr = getFocusedFile();
-
-  updateRow(fileHandler.revert(tr.id));
+  updateRow(fileHandler.revert(getFocusedFile().id));
   toggleRevertOptimizeMenus();
 });
 
 ipcRenderer.on('app:re-optimize', function () {
-  const tr = getFocusedFile();
-
-  updateRow(fileHandler.optimize(tr.id));
+  updateRow(fileHandler.optimize(getFocusedFile().id));
   toggleRevertOptimizeMenus();
 });

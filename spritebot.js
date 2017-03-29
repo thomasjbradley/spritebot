@@ -95,12 +95,8 @@ ipcMain.on('app:show-save-dialog', function (e, arg) {
   menuFile.trigger('app:save-sprite-sheet');
 });
 
-ipcMain.on('menu:set-pretty-output', function (e, isPretty) {
-  let menuPrefix = (is.macOS()) ? 'app' : 'file';
-
-  appMenu.updateMenuItem(`${menuPrefix},pretty-output`, {
-    checked: isPretty,
-  });
+ipcMain.on('app:show-add-dialog', function (e, arg) {
+  menuFile.trigger('app:add-files');
 });
 
 ipcMain.on('menu:enable-file-items', function () {
