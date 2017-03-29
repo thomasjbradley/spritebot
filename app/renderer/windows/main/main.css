@@ -146,6 +146,10 @@ button .icon {
   opacity: .7;
 }
 
+button:active .icon {
+  opacity: 1;
+}
+
 .btn-seamless {
   -webkit-appearance: none;
   appearance: none;
