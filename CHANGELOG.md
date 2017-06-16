@@ -5,7 +5,7 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## [Unreleased] — 2017-03-29
+## [Unreleased]
 
 ### Added
 
@@ -13,7 +13,12 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Remove the “Pretty” option and made it so the “Copy” commands all output pretty. Based on user-testing this is the most likely use-case, and the “Pretty” toggle was confusing users.
+- Removed the “Pretty” option and made it so the “Copy” commands all output pretty. Based on user-testing this is the most likely use-case, and the “Pretty” toggle was confusing users.
+- Updated all the dependencies.
+
+### Fixed
+
+- Removed the `text-decoration` from underneath all the fancy ampersands.
 
 ---
 

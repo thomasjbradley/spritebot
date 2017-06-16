@@ -65,4 +65,4 @@ Then further down, in your HTML you can use a single sprite with the `<use>` sta
 
 ## License & copyright
 
-© 2016 Thomas J Bradley — [GPL](LICENSE).
+© 2017 Thomas J Bradley — [GPL](LICENSE).
