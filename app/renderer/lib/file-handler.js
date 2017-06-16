@@ -1,6 +1,6 @@
 'use strict';
 
-const RE_START_PROCESSOR = 're-run-processor';
+const RESTART_PROCESSOR = 're-run-processor';
 
 const fs = require('fs');
 const dir = require('node-dir');
@@ -15,7 +15,7 @@ const reset = function () {
 };
 
 const processAllFiles = function (renderer, opts, restart) {
-  if (restart === RE_START_PROCESSOR) {
+  if (restart === RESTART_PROCESSOR) {
     svgQueue.restart();
     svgSpriter.reset();
   }
@@ -119,7 +119,7 @@ const compile = function (opts, next) {
 };
 
 module.exports = {
-  RE_START_PROCESSOR: RE_START_PROCESSOR,
+  RESTART_PROCESSOR: RESTART_PROCESSOR,
   reset: reset,
   process: processAllFiles,
   add: add,
