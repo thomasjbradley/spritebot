@@ -307,6 +307,7 @@ h1 {
 [title="and"] {
   font-family: Baskerville, Palatino, "Book Antiqua", serif;
   font-style: italic;
+  text-decoration: none;
 }
 
 main {
