@@ -6,33 +6,12 @@ const merge = require('merge-objects');
 const classify = require(__dirname + '/../../shared/classify');
 
 let svgs = [];
-let queueIndex = -1;
+let queue = [];
 
 const findIndex = function (id) {
   return svgs.findIndex(function (item) {
     return item.id == id;
   });
-};
-
-const restart = function () {
-  queueIndex = -1;
-};
-
-const reset = function () {
-  restart();
-  svgs = [];
-};
-
-const run = function (processor, opts, before, after) {
-  queueIndex++;
-
-  if (queueIndex >= svgs.length) {
-    queueIndex--;
-    return;
-  }
-
-  processor(svgs[queueIndex], opts, before, after);
-  run(processor, opts, before, after);
 };
 
 const getByPath = function (filepath) {
@@ -41,18 +20,42 @@ const getByPath = function (filepath) {
   });
 };
 
+const restart = function () {
+  queue = [...svgs.keys()];
+};
+
+const reset = function () {
+  restart();
+  svgs = [];
+};
+
+const run = function (processor, opts, before, after) {
+  if (queue.length <= 0) return;
+
+  processor(svgs[queue.shift()], opts, before, after);
+  run(processor, opts, before, after);
+};
+
 const add = function (filepath) {
-  let svgObj = {
-    id: classify(filepath),
-    path: filepath,
-    filename: path.parse(filepath).base,
-    filenamePretty: classify(path.parse(filepath).base.replace(/\.svg$/, '')),
-  };
+  let svgObj;
   let prevSvgObj = getByPath(filepath);
 
-  if (prevSvgObj) return prevSvgObj;
+  if (prevSvgObj) {
+    prevSvgObj.original = false;
+    prevSvgObj.optimized = false;
+    queue.push(findIndex(prevSvgObj.id));
+    svgObj = prevSvgObj;
+  } else {
+    svgObj = {
+      id: classify(filepath),
+      path: filepath,
+      filename: path.parse(filepath).base,
+      filenamePretty: classify(path.parse(filepath).base.replace(/\.svg$/, '')),
+    };
 
-  svgs.push(svgObj);
+    svgs.push(svgObj);
+    queue.push(svgs.length - 1);
+  }
 
   return svgObj;
 };

@@ -10,6 +10,7 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Because there is no more “Pretty” toggle, the nav bar looked imbalanced so I added a “Add” button.
+- When dropping a file that’s already been processed it is now re-processed instead of ignored.
 
 ### Changed
 

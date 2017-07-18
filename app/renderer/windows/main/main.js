@@ -46,6 +46,8 @@ const addRow = function (svgObj, opts) {
 const updateRow = function (svgObj, opts) {
   const elem = document.getElementById(svgObj.id);
 
+  if (!opts && !svgObj.bytesOut) elem.querySelector('.status-progress').value = 0;
+
   if (opts && opts.status && opts.status == 'computing') {
     elem.querySelector('.status-progress').value = 1;
   }
