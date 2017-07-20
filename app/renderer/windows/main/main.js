@@ -43,14 +43,42 @@ const addRow = function (svgObj, opts) {
   $resultsTable.innerHTML += renderedRow;
 };
 
+const deleteOldSymbolRows = function (svgObj) {
+  let oldRows = document.querySelectorAll(`[data-parent-id^="${svgObj.id}"]`);
+
+  [].forEach.call(oldRows, function (row) {
+    row.remove();
+  });
+};
+
+const addSymbolRows = function (svgObj) {
+  const parent = document.getElementById(svgObj.id);
+
+  deleteOldSymbolRows(svgObj);
+
+  for (let symbol of Object.values(svgObj.symbols)) {
+    let tempTable = document.createElement('table');
+    let renderedRow = templateHelper.render('symbol-row.html', {
+      id: symbol.id,
+      filename: symbol.filename,
+      parentId: svgObj.id,
+    });
+
+    tempTable.innerHTML += renderedRow;
+
+    parent.after(tempTable.querySelector('tr:first-child'));
+  };
+};
+
 const updateRow = function (svgObj, opts) {
   const elem = document.getElementById(svgObj.id);
 
-  if (!opts && !svgObj.bytesOut) elem.querySelector('.status-progress').value = 0;
-
-  if (opts && opts.status && opts.status == 'computing') {
-    elem.querySelector('.status-progress').value = 1;
+  if (svgObj.symbols) {
+    addSymbolRows(svgObj);
   }
+
+  if (!opts && !svgObj.bytesOut) elem.querySelector('.status-progress').value = 0;
+  if (opts && opts.status && opts.status == 'computing') elem.querySelector('.status-progress').value = 1;
 
   if (svgObj.bytesIn) {
     elem.querySelector('.size-bytesin').innerText = sizeHelper.bytesToKilobytes(svgObj.bytesIn);
@@ -76,8 +104,7 @@ const updateRow = function (svgObj, opts) {
 };
 
 const render = function (svgObj, opts) {
-  const id = classify(svgObj.path);
-  const elem = document.getElementById(id);
+  const elem = document.getElementById(svgObj.id);
 
   if (elem) {
     updateRow(svgObj, opts);

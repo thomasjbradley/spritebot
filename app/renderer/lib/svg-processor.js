@@ -3,6 +3,7 @@
 const fs = require('fs');
 const merge = require('merge-objects');
 const SVGO = require('svgo');
+const xml2js = require('xml2js').parseString;
 
 const svgoMin = new SVGO(require(__dirname + '/../config/svgo-minify.json'));
 const svgoPretty = new SVGO(require(__dirname + '/../config/svgo-pretty.json'));
@@ -21,6 +22,44 @@ const getDimensionsFromViewBox = function (vb) {
   };
 };
 
+const parseSymbolChildren = function (svgData, svgObj) {
+  if (svgObj.symbols) return svgObj;
+
+  svgObj.symbols = {};
+
+  svgData.svg.symbol.forEach(function (symbol, i) {
+    let id = (symbol.$.id) ? symbol.$.id : `unnamed-symbol-${i}`;
+
+    svgObj.symbols[id] = {
+      id: `${svgObj.id}-${id}`,
+      filename: id,
+      symbolId: id,
+    };
+  })
+
+  return svgObj;
+};
+
+const isOnlySymbols = function (svgObj, next) {
+  xml2js(svgObj.original, {normalizeTags: true}, function (err, result) {
+    let onlySymbols = true;
+
+    if (err) return next(svgObj);
+    if (!result.svg.symbol) return next(svgObj);
+
+    for (let elem of Object.keys(result.svg)) {
+      if (['$', 'symbol'].indexOf(elem) === -1) {
+        onlySymbols = false;
+        break;
+      }
+    }
+
+    if (onlySymbols) svgObj = parseSymbolChildren(result, svgObj);
+
+    next(svgObj);
+  });
+};
+
 const read = function (svgObj, next) {
   fs.readFile(svgObj.path, 'utf8', function (err, data) {
     svgObj = merge(svgObj, {
@@ -28,7 +67,9 @@ const read = function (svgObj, next) {
       bytesIn: Buffer.byteLength(data),
     });
 
-    next(svgObj);
+    isOnlySymbols(svgObj, function (svgObj) {
+      next(svgObj);
+    });
   });
 };
 
@@ -131,12 +172,12 @@ const getOptimizer = function (opts) {
 };
 
 const optimize = function (svgObj, opts, before, after) {
-  before(svgObj);
-
   if (svgObj.original) {
+    before(svgObj);
     processSvg(svgObj, opts, after);
   } else {
     read(svgObj, function (svgObj) {
+      before(svgObj);
       processSvg(svgObj, opts, after);
     });
   }
