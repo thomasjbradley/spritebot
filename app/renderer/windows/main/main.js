@@ -203,10 +203,16 @@ const checkIfLastFile = function () {
 }
 
 const toggleRevertOptimizeMenus = function () {
-  if (getFocusedFile().dataset.reverted === 'true') {
-    ipcRenderer.send('menu:enable-re-optimize');
+  const focusedFile = getFocusedFile();
+
+  if ('symbolId' in focusedFile.dataset){
+    ipcRenderer.send('menu:disable-undo-actions');
   } else {
-    ipcRenderer.send('menu:enable-revert-to-original');
+    if (focusedFile.dataset.reverted === 'true') {
+      ipcRenderer.send('menu:enable-re-optimize');
+    } else {
+      ipcRenderer.send('menu:enable-revert-to-original');
+    }
   }
 };
 

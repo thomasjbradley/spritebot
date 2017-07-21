@@ -141,6 +141,11 @@ ipcMain.on('menu:enable-re-optimize', function () {
   appMenu.updateMenuItem('edit,re-optimize', { enabled: true });
 });
 
+ipcMain.on('menu:disable-undo-actions', function () {
+  appMenu.updateMenuItem('edit,revert-to-original', { enabled: false });
+  appMenu.updateMenuItem('edit,re-optimize', { enabled: false });
+});
+
 ipcMain.on('menu:disabled-save-sprite-sheet', function () {
   appMenu.updateMenuItem('file,save-sprite-sheet', {
     enabled: false,
