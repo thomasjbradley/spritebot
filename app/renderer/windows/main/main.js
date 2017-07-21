@@ -197,6 +197,10 @@ const removeFile = function (tr) {
   if ('symbolId' in tr.dataset) {
     fileHandler.removeSymbol(tr.dataset.parentId, tr.dataset.symbolId);
   } else {
+    while (document.querySelector(`[id="${tr.id}"] + tr[data-parent-id="${tr.id}"]`)) {
+      document.querySelector(`[id="${tr.id}"] + tr[data-parent-id="${tr.id}"]`).remove();
+    }
+
     fileHandler.remove(tr.id);
   }
 
