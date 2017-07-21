@@ -14,6 +14,7 @@
     "merge-objects": "^1.0.5",
     "node-dir": "^0.1.17",
     "svgo": "^0.7.2",
+    "xml-formatter": "^1.0.1",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
