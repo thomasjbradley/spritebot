@@ -52,31 +52,35 @@ const deleteOldSymbolRows = function (svgObj) {
   });
 };
 
-const addSymbolRows = function (svgObj) {
+const addSymbolRows = function (svgObj, opts) {
   const parent = document.getElementById(svgObj.id);
+  const symbolIds = (opts && 'deleted' in opts) ? svgObj.deletedSymbols : svgObj.symbols;
+  const reset = (opts && 'reset' in opts) ? opts.reset : true;
 
-  deleteOldSymbolRows(svgObj);
+  if (reset) deleteOldSymbolRows(svgObj);
 
-  for (let symbol of Object.values(svgObj.symbols)) {
+  for (let symbol of Object.values(symbolIds)) {
     let tempTable = document.createElement('table');
     let renderedRow = templateHelper.render('symbol-row.html', {
       id: symbol.id,
       filename: symbol.filename,
       parentId: svgObj.id,
     });
+    let tr;
 
     tempTable.innerHTML += renderedRow;
+    tr = tempTable.querySelector('tr:first-child');
 
-    parent.after(tempTable.querySelector('tr:first-child'));
+    if (opts && 'deleted' in opts) tr.dataset.deleted = true;
+
+    parent.after(tr);
   };
 };
 
 const updateRow = function (svgObj, opts) {
   const elem = document.getElementById(svgObj.id);
 
-  if (svgObj.symbols) {
-    addSymbolRows(svgObj);
-  }
+  if (svgObj.symbols) addSymbolRows(svgObj);
 
   if (!opts && !svgObj.bytesOut) elem.querySelector('.status-progress').value = 0;
   if (opts && opts.status && opts.status == 'computing') elem.querySelector('.status-progress').value = 1;
@@ -99,6 +103,8 @@ const updateRow = function (svgObj, opts) {
 
   if (svgObj.reverted) {
     elem.dataset.reverted = true;
+
+    if (svgObj.deletedSymbols) addSymbolRows(svgObj, { deleted: true, reset: false });
   } else {
     elem.dataset.reverted = false;
   }
@@ -187,7 +193,12 @@ const addFiles = function (files) {
 };
 
 const removeFile = function (tr) {
-  fileHandler.remove(tr.id);
+  if ('symbolId' in tr.dataset) {
+    fileHandler.removeSymbol(tr.dataset.parentId, tr.dataset.symbolId);
+  } else {
+    fileHandler.remove(tr.id);
+  }
+
   tr.parentNode.removeChild(tr);
   checkIfLastFile();
 };

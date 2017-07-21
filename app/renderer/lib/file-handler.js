@@ -81,6 +81,24 @@ const remove = function (id) {
   svgSpriter.remove(id);
 };
 
+const removeSymbol = function (parentId, symbolId) {
+  const svgObj = svgQueue.get(parentId);
+
+  if (svgObj.symbols[symbolId]) {
+    let symbol = svgHelper.extractSymbol(svgObj.optimized, symbolId);
+
+    svgObj.optimized = svgObj.optimized.replace(symbol, '');
+
+    if (!('deletedSymbols' in svgObj)) svgObj.deletedSymbols = {};
+
+    svgObj.deletedSymbols[symbolId] = svgObj.symbols[symbolId];
+    delete svgObj.symbols[symbolId];
+
+    svgQueue.update(svgObj);
+    svgProcessor.save(svgObj);
+  }
+};
+
 const revert = function (id) {
   const svgObj = svgQueue.get(id);
 
@@ -126,6 +144,7 @@ module.exports = {
   get: get,
   revert: revert,
   remove: remove,
+  removeSymbol: removeSymbol,
   minify: minify,
   optimize: optimize,
   compile: compile,
