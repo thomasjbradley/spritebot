@@ -60,18 +60,19 @@ const addSymbolRows = function (svgObj, opts) {
   if (reset) deleteOldSymbolRows(svgObj);
 
   for (let symbol of Object.values(symbolIds)) {
+    let tr;
     let tempTable = document.createElement('table');
     let renderedRow = templateHelper.render('symbol-row.html', {
       id: symbol.id,
       filename: symbol.filename,
       parentId: svgObj.id,
+      parentname: svgObj.filename,
     });
-    let tr;
 
     tempTable.innerHTML += renderedRow;
     tr = tempTable.querySelector('tr:first-child');
 
-    if (opts && 'deleted' in opts) tr.dataset.deleted = true;
+    if (opts && 'deleted' in opts) tr.dataset.reverted = true;
 
     parent.after(tr);
   };
@@ -248,6 +249,17 @@ const moveFocus = function (direction) {
   toggleRevertOptimizeMenus();
 };
 
+const removeFocus = function () {
+  const current = getFocusedFile();
+
+  if (!current) return;
+
+  ipcRenderer.send('menu:disable-focused-file-items');
+
+  current.dataset.state = '';
+  current.setAttribute('aria-selected', false);
+};
+
 const revealInFinder = function (tr) {
   const svg = fileHandler.get(tr.id);
 
@@ -310,6 +322,11 @@ $body.addEventListener('click', function (e) {
 
   if (e.target.matches('.btn-reveal-in-finder')) {
     revealInFinder(e.target.closest('tr'));
+    return;
+  }
+
+  if (e.target.matches('table')) {
+    removeFocus();
     return;
   }
 });

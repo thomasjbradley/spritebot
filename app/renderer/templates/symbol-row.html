@@ -1,6 +1,11 @@
 <tr id="{{id}}" data-symbol-id="{{filename}}" data-parent-id="{{parentId}}">
   <td class="col-status">&nbsp;</td>
-  <th class="col-file" scope="row">&nbsp; |-&gt; #{{filename}}</th>
+  <th class="col-file" scope="row" aria-label=""{{filename}}, a symbol of {{parentname}}">
+    <span class="symbol-icon-wrap" title="A symbol of {{parentname}}">
+      <svg class="symbol-icon"><use xlink:href="#icon-symbol" /></svg>
+    </span>
+    <span class="symbol-name">#<span class="symbol-id">{{filename}}</span></span>
+  </th>
   <td class="col-reveal">&nbsp;</td>
   <td class="col-size">&nbsp;</td>
   <td class="col-savings">&nbsp;</td>
