@@ -115,7 +115,7 @@ const render = function (svgObj, opts) {
 };
 
 const getCurrentOrParentId = function (current) {
-  return (current.hasAttribute('data-parent-id')) ? current.getAttribute('data-parent-id') : current.id;
+  return ('parentId' in current.dataset) ? current.dataset.parentId : current.id;
 };
 
 const svgWhole = function (current, next) {
@@ -124,7 +124,7 @@ const svgWhole = function (current, next) {
 
   fileHandler.minify(id, { pretty: true }, function (svg) {
     if (svgObj.symbols) {
-      svg = svgHelper.convertSymbolToSvg(svgHelper.extractSymbol(svg, current.getAttribute('data-symbol-id')), current.getAttribute('data-symbol-id'));
+      svg = svgHelper.convertSymbolToSvg(svgHelper.extractSymbol(svg, current.dataset.symbolId), current.dataset.symbolId);
     } else {
       svg = svgHelper.cleanId(svg, svgObj.filenamePretty);
     }
@@ -136,7 +136,7 @@ const svgWhole = function (current, next) {
 const svgUseStatement = function (current, next) {
   const id = getCurrentOrParentId(current);
   const svgObj = fileHandler.get(id);
-  const hashId = (current.hasAttribute('data-symbol-id')) ? current.getAttribute('data-symbol-id') : svgObj.filenamePretty;
+  const hashId = ('dymbolId' in current.dataset) ? current.dataset.symbolId : svgObj.filenamePretty;
 
   next(svgHelper.getUseStatement(hashId));
 };
@@ -147,7 +147,7 @@ const svgSymbol = function (current, next) {
 
   fileHandler.minify(id, { pretty: true }, function (svg) {
     if (svgObj.symbols) {
-      let theSymbol = svgHelper.extractSymbol(svg, current.getAttribute('data-symbol-id'));
+      let theSymbol = svgHelper.extractSymbol(svg, current.dataset.symbolId);
 
       if (theSymbol) svg = theSymbol;
     } else {
@@ -165,7 +165,7 @@ const svgToDataUri = function (current, next) {
 
   fileHandler.minify(id, { pretty: false }, function (svg) {
     if (svgObj.symbols) {
-      let theSymbol = svgHelper.convertSymbolToSvg(svgHelper.extractSymbol(svg, current.getAttribute('data-symbol-id')), current.getAttribute('data-symbol-id'));
+      let theSymbol = svgHelper.convertSymbolToSvg(svgHelper.extractSymbol(svg, current.dataset.symbolId), current.dataset.symbolId);
 
       if (theSymbol) svg = theSymbol;
     }
