@@ -3,7 +3,7 @@
 const path = require('path');
 const merge = require('merge-objects');
 
-const classify = require(__dirname + '/../../shared/classify');
+const classify = require(`${__dirname}/../../shared/classify`);
 
 let svgs = [];
 let queue = [];

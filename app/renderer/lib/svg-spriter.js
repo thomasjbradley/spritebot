@@ -2,8 +2,8 @@
 
 const path = require('path');
 
-const classify = require(__dirname + '/../../shared/classify');
-const templateHelper = require(__dirname + '/../lib/template-helper');
+const classify = require(`${__dirname}/../../shared/classify`);
+const templateHelper = require(`${__dirname}/../lib/template-helper`);
 
 let sprites = [];
 

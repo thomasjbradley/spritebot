@@ -5,9 +5,9 @@ const RESTART_PROCESSOR = 're-run-processor';
 const fs = require('fs');
 const dir = require('node-dir');
 
-const svgQueue = require(__dirname + '/svg-queue');
-const svgProcessor = require(__dirname + '/svg-processor');
-const svgSpriter = require(__dirname + '/svg-spriter');
+const svgQueue = require(`${__dirname}/svg-queue`);
+const svgProcessor = require(`${__dirname}/svg-processor`);
+const svgSpriter = require(`${__dirname}/svg-spriter`);
 
 const reset = function () {
   svgQueue.reset();
