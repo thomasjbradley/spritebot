@@ -5,10 +5,11 @@ const fs = require('fs');
 const path = require('path');
 const {ipcRenderer, clipboard, shell} = require('electron');
 
-const classify = require(__dirname + '/../../../shared/classify');
-const fileHandler = require(__dirname + '/../../lib/file-handler');
-const sizeHelper = require(__dirname + '/../../lib/file-size-helper');
-const templateHelper = require(__dirname + '/../../lib/template-helper');
+const classify = require(`${__dirname}/../../../shared/classify`);
+const fileHandler = require(`${__dirname}/../../lib/file-handler`);
+const sizeHelper = require(`${__dirname}/../../lib/file-size-helper`);
+const templateHelper = require(`${__dirname}/../../lib/template-helper`);
+const svgHelper = require(`${__dirname}/../../lib/svg-helper`);
 
 const $body = document.body;
 const $header = document.getElementById('header');
@@ -113,58 +114,63 @@ const render = function (svgObj, opts) {
   }
 };
 
-const svgWhole = function (id, next) {
+const getCurrentOrParentId = function (current) {
+  return (current.hasAttribute('data-parent-id')) ? current.getAttribute('data-parent-id') : current.id;
+};
+
+const svgWhole = function (current, next) {
+  const id = getCurrentOrParentId(current);
   const svgObj = fileHandler.get(id);
 
   fileHandler.minify(id, { pretty: true }, function (svg) {
-    svg = svg
-      .replace(/\<svg([^>])\s*id="[^"]+"/, '<svg$1')
-      .replace(/\<svg/, `<svg id="${svgObj.filenamePretty}"`)
-      .replace(/ +/g, ' ')
-    ;
+    if (svgObj.symbols) {
+      svg = svgHelper.convertSymbolToSvg(svgHelper.extractSymbol(svg, current.getAttribute('data-symbol-id')), current.getAttribute('data-symbol-id'));
+    } else {
+      svg = svgHelper.cleanId(svg, svgObj.filenamePretty);
+    }
 
-    next(svg);
+    next(svgHelper.beautify(svg));
   });
 };
 
-const svgUseStatement = function (id, next) {
+const svgUseStatement = function (current, next) {
+  const id = getCurrentOrParentId(current);
   const svgObj = fileHandler.get(id);
+  const hashId = (current.hasAttribute('data-symbol-id')) ? current.getAttribute('data-symbol-id') : svgObj.filenamePretty;
 
-  next(`<svg><use xlink:href="#${svgObj.filenamePretty}" /></svg>`);
+  next(svgHelper.getUseStatement(hashId));
 };
 
-const svgSymbol = function (id, next) {
+const svgSymbol = function (current, next) {
+  const id = getCurrentOrParentId(current);
   const svgObj = fileHandler.get(id);
 
   fileHandler.minify(id, { pretty: true }, function (svg) {
-    svg = svg
-      .replace(/\<svg([^>])\s*id="[^"]+"/, '<svg$1')
-      .replace(/\<svg/, `<symbol id="${svgObj.filenamePretty}"`)
-      .replace(/\<\/svg/, '</symbol')
-      .replace(/ (width|height)="\d+"/g, '')
-      .replace(/ +/g, ' ')
-    ;
+    if (svgObj.symbols) {
+      let theSymbol = svgHelper.extractSymbol(svg, current.getAttribute('data-symbol-id'));
 
-    next(svg);
+      if (theSymbol) svg = theSymbol;
+    } else {
+      svg = svgHelper.convertSvgToSymbol(svg, svgObj.filenamePretty);
+    }
+
+    next(svgHelper.beautify(svg));
   });
 };
 
-const svgToDataUri = function (id, next) {
+const svgToDataUri = function (current, next) {
   const prefix = 'data:image/svg+xml,';
+  const id = getCurrentOrParentId(current);
+  const svgObj = fileHandler.get(id);
 
   fileHandler.minify(id, { pretty: false }, function (svg) {
-    svg = svg
-      .replace(/"/g, '\'')
-      .replace(/%/g, '%25')
-      .replace(/#/g, '%23')
-      .replace(/{/g, '%7B')
-      .replace(/}/g, '%7D')
-      .replace(/</g, '%3C')
-      .replace(/>/g, '%3E')
-      .replace(/\s+/g,' ')
-    ;
+    if (svgObj.symbols) {
+      let theSymbol = svgHelper.convertSymbolToSvg(svgHelper.extractSymbol(svg, current.getAttribute('data-symbol-id')), current.getAttribute('data-symbol-id'));
 
-    next(prefix + svg);
+      if (theSymbol) svg = theSymbol;
+    }
+
+    next(svgHelper.convertSvgToDataUri(svg));
   });
 };
 
@@ -357,25 +363,25 @@ ipcRenderer.on('app:reveal-in-finder', function (e) {
 });
 
 ipcRenderer.on('app:copy-svg', function (e) {
-  svgWhole(getFocusedFile().id, function (svg) {
+  svgWhole(getFocusedFile(), function (svg) {
     clipboard.writeText(svg);
   });
 });
 
 ipcRenderer.on('app:copy-svg-use', function (e) {
-  svgUseStatement(getFocusedFile().id, function (svg) {
+  svgUseStatement(getFocusedFile(), function (svg) {
     clipboard.writeText(svg);
   });
 });
 
 ipcRenderer.on('app:copy-svg-symbol', function (e) {
-  svgSymbol(getFocusedFile().id, function (svg) {
+  svgSymbol(getFocusedFile(), function (svg) {
     clipboard.writeText(svg);
   });
 });
 
 ipcRenderer.on('app:copy-svg-datauri', function (e) {
-  svgToDataUri(getFocusedFile().id, function (svg) {
+  svgToDataUri(getFocusedFile(), function (svg) {
     clipboard.writeText(svg);
   });
 });
