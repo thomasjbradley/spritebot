@@ -5,12 +5,13 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## [Unreleased]
+## [1.3.0] — 2017-07-21
 
 ### Added
 
 - Because there is no more “Pretty” toggle, the nav bar looked imbalanced so I added a “Add” button.
 - When dropping a file that’s already been processed it is now re-processed instead of ignored.
+- When dropping a sprite sheet, the symbols are displayed, can be removed, and merged with other SVGs and sprite sheets.
 
 ### Changed
 
