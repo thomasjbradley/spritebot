@@ -14,7 +14,7 @@ const defaultOpts = {
   pretty: false,
 };
 
-const read = function (svgObj, next) {
+const read = function (svgObj, opts, next) {
   fs.readFile(svgObj.path, 'utf8', function (err, data) {
     svgObj = merge(svgObj, {
       original: data,
@@ -22,7 +22,9 @@ const read = function (svgObj, next) {
     });
 
     svgHelper.isOnlySymbols(svgObj, function (svgObj) {
-      next(svgObj);
+      if (svgObj.symbols) opts.sprites = true;
+
+      next(svgObj, opts);
     });
   });
 };
@@ -95,9 +97,9 @@ const optimize = function (svgObj, opts, before, after) {
     before(svgObj);
     processSvg(svgObj, opts, after);
   } else {
-    read(svgObj, function (svgObj) {
-      before(svgObj);
-      processSvg(svgObj, opts, after);
+    read(svgObj, opts, function (svgObjNew, optsNew) {
+      before(svgObjNew);
+      processSvg(svgObjNew, optsNew, after);
     });
   }
 };
