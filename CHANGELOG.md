@@ -5,6 +5,16 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## [1.3.1] — 2017-07-24
+
+### Fixed
+
+- Prevent sprite sheets from getting all their symbols removed because SVGO things they are useless.
+- When a sprite sheet is re-dropped the correct symbol list was not being shown—it had older symbols from previous drops listed.
+- When saving a sprite sheet Spritebot now remembers the correct folder & filename instead of constantly resetting to the `~/Downloads` folder.
+
+---
+
 ## [1.3.0] — 2017-07-21
 
 ### Added
