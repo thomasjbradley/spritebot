@@ -1,7 +1,11 @@
 'use strict';
 
+const path = require('path');
 const {app, dialog} = require('electron');
 const is = require('electron-is');
+const config = new (require('electron-store'))();
+
+const DEFAULT_FILE_NAME = '/sprite-sheet.svg';
 
 const addFilesOpts = {
   title: 'Add Files…',
@@ -21,7 +25,7 @@ const addFolderOpts = {
 
 const saveOpts = {
   title: 'Save Sprite Sheet',
-  defaultPath: app.getPath('downloads') + '/sprite-sheet.svg'
+  defaultPath: (config.has('save-path')) ? config.get('save-path') : app.getPath('downloads') + DEFAULT_FILE_NAME,
 };
 
 const commands = {
@@ -55,7 +59,12 @@ const commands = {
 
   'app:save-sprite-sheet': function (menuItem, win) {
     dialog.showSaveDialog(win, saveOpts, function (filepath) {
-      if (filepath) win.send('app:save-sprite-sheet', filepath);
+      if (filepath) {
+        config.set('save-path', filepath);
+        saveOpts.defaultPath = filepath;
+
+        win.send('app:save-sprite-sheet', filepath);
+      }
     });
   },
 };

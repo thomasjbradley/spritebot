@@ -10,6 +10,7 @@
   "main": "spritebot.js",
   "dependencies": {
     "electron-is": "^2.4.0",
+    "electron-store": "^1.2.0",
     "handlebars": "^4.0.10",
     "merge-objects": "^1.0.5",
     "node-dir": "^0.1.17",
