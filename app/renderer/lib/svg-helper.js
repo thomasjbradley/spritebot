@@ -4,8 +4,6 @@ const xml2js = require('xml2js').parseString;
 const xmlformat = require('xml-formatter');
 
 const parseSymbolChildren = function (svgData, svgObj) {
-  if (svgObj.symbols) return svgObj;
-
   svgObj.symbols = {};
 
   svgData.svg.symbol.forEach(function (symbol, i) {
