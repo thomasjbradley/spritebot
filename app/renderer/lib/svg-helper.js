@@ -54,10 +54,10 @@ const forceWidthHeight = function (svg) {
   let dimensions;
 
   if (!matches || !matches[0]) return svg;
-  if (!matches[0].match(/viewBox="([\s\d]+)"/)) return svg;
+  if (!matches[0].match(/viewBox="([\s\d\.]+)"/)) return svg;
 
   svgTag = matches[0];
-  dimensions = getDimensionsFromViewBox(svgTag.match(/viewBox="([\s\d]+)"/)[0]);
+  dimensions = getDimensionsFromViewBox(svgTag.match(/viewBox="([\s\d\.]+)"/)[0]);
 
   if (!svgTag.match(/\s*width=/)) svgTag = svgTag.replace(/>$/, ` width="${dimensions.width}">`);
   if (!svgTag.match(/\s*height=/)) svgTag = svgTag.replace(/>$/, ` height="${dimensions.height}">`);
