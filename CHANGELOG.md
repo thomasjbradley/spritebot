@@ -3,6 +3,12 @@
 This file documents all the notable changes for each version of Spritebot.
 Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.2] — 2017-08-30
+
+### Fixed
+
+- The `viewBox` detection code when attempting for force `width`/`height` attributes didn’t accommodate decimal places.
+
 ---
 
 ## [1.3.1] — 2017-07-24
