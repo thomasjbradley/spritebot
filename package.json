@@ -16,22 +16,22 @@
     "node-dir": "^0.1.17",
     "svgo": "^0.7.2",
     "xml-formatter": "^1.0.1",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "electron": "^1.6.11",
-    "electron-builder": "^19.4.1"
+    "electron": "^1.7.5",
+    "electron-builder": "^19.27.2"
   },
   "scripts": {
     "debug": "NODE_ENV=development electron spritebot.js",
     "start": "NODE_ENV=production electron spritebot.js",
-    "pack:mac": "build -m --dir",
-    "pack:win": "build -w --dir",
+    "pack-mac": "build -m --dir",
+    "pack-win": "build -w --dir",
     "pack": "build -mw --dir",
-    "pack:bg": "tiffutil -cathidpicheck ./build/background.png ./build/background@2x.png -out ./build/background.tiff",
-    "build:mac": "npm run pack:bg && build -m",
-    "build:win": "build -w",
-    "build": "npm run build:mac && npm run build:win"
+    "pack-bg": "tiffutil -cathidpicheck ./build/background.png ./build/background@2x.png -out ./build/background.tiff",
+    "build-mac": "npm run pack-bg && build -m",
+    "build-win": "build -w",
+    "build": "npm run build-mac && npm run build-win"
   },
   "repository": {
     "type": "git",
