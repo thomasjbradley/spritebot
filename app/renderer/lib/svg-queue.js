@@ -25,7 +25,7 @@ const restart = function () {
 };
 
 const reset = function () {
-  restart();
+  queue = [];
   svgs = [];
 };
 

@@ -9,7 +9,8 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- Fix a bug with SVGs that used `xlink:href` internally—they weren’t being processed properly.
+- Fixed a bug with SVGs that used `xlink:href` internally—they weren’t being processed properly.
+- Fixed a bug where the SVG queue wasn’t reset properly when all the files where cleared from the interface.
 
 ---
 
