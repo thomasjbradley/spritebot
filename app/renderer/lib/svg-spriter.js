@@ -57,8 +57,10 @@ const remove = function (id) {
 
 const compile = function (optimizer, next) {
   let spriteStrings = sprites.map(convertToSymbol);
+  let allSprites = spriteStrings.join('');
   let spriteSheet = templateHelper.render('sprite-sheet.xml', {
-    sprites: spriteStrings.join(''),
+    sprites: allSprites,
+    xmlnsExtra: (/xlink\:/.test(allSprites)) ? ' xmlns:xlink="http://www.w3.org/1999/xlink"' : '',
   }, { noEscape: true });
 
   optimizer(spriteSheet, next);

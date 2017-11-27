@@ -3,6 +3,16 @@
 This file documents all the notable changes for each version of Spritebot.
 Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
+---
+
+## [Unreleased]
+
+### Fixed
+
+- Fix a bug with SVGs that used `xlink:href` internally—they weren’t being processed properly.
+
+---
+
 ## [1.3.2] — 2017-08-30
 
 ### Fixed
