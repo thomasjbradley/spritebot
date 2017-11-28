@@ -1,6 +1,6 @@
 {
   "name": "Spritebot",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "license": "GPL",
   "description": "A SVG compression, minification, prettification & sprite generation application.",
   "author": "Thomas J Bradley <hey@thomasjbradley.ca>",
