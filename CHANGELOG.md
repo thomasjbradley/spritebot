@@ -5,7 +5,7 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## [Unreleased]
+## [1.3.3] — 2017-11-28
 
 ### Changed
 
