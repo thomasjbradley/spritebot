@@ -7,6 +7,10 @@ Spritebot adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Updated some dependencies (Electron, Handlebars).
+
 ### Fixed
 
 - Fixed a bug with SVGs that used `xlink:href` internally—they weren’t being processed properly.
